@@ -1,4 +1,4 @@
-package com.example.squiz.model;
+package com.example.squiz.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,16 +11,16 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity @Table(name="t_quiz")
-public class Quiz {
+public class QuizEB {
     @Id @SequenceGenerator(name = "quiz_sequence", sequenceName = "quiz_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_sequence")
     private Long id;
 
     @OneToOne(mappedBy = "quiz")
-    private Questions questions;
+    private QuestionsEB questions;
 
     @OneToOne(mappedBy = "quiz")
-    private AnswerSets answerSets;
+    private AnswerSetsEB answerSets;
 
     private Integer creatorId;
     private LocalDateTime createdDate;
@@ -37,19 +37,19 @@ public class Quiz {
         this.id = id;
     }
 
-    public Questions getQuestions() {
+    public QuestionsEB getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Questions questions) {
+    public void setQuestions(QuestionsEB questions) {
         this.questions = questions;
     }
 
-    public AnswerSets getAnswerSets() {
+    public AnswerSetsEB getAnswerSets() {
         return answerSets;
     }
 
-    public void setAnswerSets(AnswerSets answerSets) {
+    public void setAnswerSets(AnswerSetsEB answerSets) {
         this.answerSets = answerSets;
     }
 

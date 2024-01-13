@@ -1,4 +1,4 @@
-package com.example.squiz.model;
+package com.example.squiz.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,17 +11,17 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity @Table(name="t_choices")
-public class Choices {
+public class ChoicesEB {
     @Id @SequenceGenerator(name = "choices_sequence", sequenceName = "choices_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "choices_sequence")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Questions questions;
+    private QuestionsEB questions;
 
     @OneToOne(mappedBy = "choices")
-    private Answers answers;
+    private AnswersEB answers;
 
     private String choiceNumber;
     private String choiceText;
@@ -37,19 +37,19 @@ public class Choices {
         this.id = id;
     }
 
-    public Questions getQuestions() {
+    public QuestionsEB getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Questions questions) {
+    public void setQuestions(QuestionsEB questions) {
         this.questions = questions;
     }
 
-    public Answers getAnswers() {
+    public AnswersEB getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Answers answers) {
+    public void setAnswers(AnswersEB answers) {
         this.answers = answers;
     }
 

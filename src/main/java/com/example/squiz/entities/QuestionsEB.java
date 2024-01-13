@@ -1,4 +1,4 @@
-package com.example.squiz.model;
+package com.example.squiz.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,23 +11,23 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity @Table(name="t_questions")
-public class Questions {
+public class QuestionsEB {
     @Id @SequenceGenerator(name = "question_sequence", sequenceName = "question_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_sequence")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
-    private Quiz quiz;
+    private QuizEB quiz;
 
-    @OneToOne(mappedBy = "question")
-    private Answers answers;
+    @OneToOne(mappedBy = "questions")
+    private AnswersEB answers;
 
-    @OneToOne(mappedBy = "question")
-    private Choices choices;
+    @OneToOne(mappedBy = "questions")
+    private ChoicesEB choices;
 
-    @OneToOne(mappedBy = "question")
-    private AnswerSets answerSets;
+    @OneToOne(mappedBy = "questions")
+    private AnswerSetsEB answerSets;
 
     private String questionNumber;
     private String question;
@@ -42,35 +42,35 @@ public class Questions {
         this.id = id;
     }
 
-    public Quiz getQuiz() {
+    public QuizEB getQuiz() {
         return quiz;
     }
 
-    public void setQuiz(Quiz quiz) {
+    public void setQuiz(QuizEB quiz) {
         this.quiz = quiz;
     }
 
-    public Answers getAnswers() {
+    public AnswersEB getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Answers answers) {
+    public void setAnswers(AnswersEB answers) {
         this.answers = answers;
     }
 
-    public Choices getChoices() {
+    public ChoicesEB getChoices() {
         return choices;
     }
 
-    public void setChoices(Choices choices) {
+    public void setChoices(ChoicesEB choices) {
         this.choices = choices;
     }
 
-    public AnswerSets getAnswerSets() {
+    public AnswerSetsEB getAnswerSets() {
         return answerSets;
     }
 
-    public void setAnswerSets(AnswerSets answerSets) {
+    public void setAnswerSets(AnswerSetsEB answerSets) {
         this.answerSets = answerSets;
     }
 

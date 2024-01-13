@@ -1,4 +1,4 @@
-package com.example.squiz.model;
+package com.example.squiz.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity @Table(name="t_answersets")
-public class AnswerSets {
+public class AnswerSetsEB {
     @Id
     @SequenceGenerator(name = "answersets_sequence", sequenceName = "answersets_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answersets_sequence")
@@ -21,14 +21,14 @@ public class AnswerSets {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
-    private Quiz quiz;
+    private QuizEB quiz;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Questions questions;
+    private QuestionsEB questions;
 
-    @OneToOne(mappedBy = "answerset")
-    private Answers answers;
+    @OneToOne(mappedBy = "answerSets")
+    private AnswersEB answers;
 
     private Long userId;
     private LocalDateTime submitTime;
@@ -42,27 +42,27 @@ public class AnswerSets {
         this.id = id;
     }
 
-    public Quiz getQuiz() {
+    public QuizEB getQuiz() {
         return quiz;
     }
 
-    public void setQuiz(Quiz quiz) {
+    public void setQuiz(QuizEB quiz) {
         this.quiz = quiz;
     }
 
-    public Questions getQuestions() {
+    public QuestionsEB getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Questions questions) {
+    public void setQuestions(QuestionsEB questions) {
         this.questions = questions;
     }
 
-    public Answers getAnswers() {
+    public AnswersEB getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Answers answers) {
+    public void setAnswers(AnswersEB answers) {
         this.answers = answers;
     }
 

@@ -1,4 +1,4 @@
-package com.example.squiz.model;
+package com.example.squiz.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,22 +11,22 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity @Table(name="t_answers")
-public class Answers {
+public class AnswersEB {
     @Id @SequenceGenerator(name = "answers_sequence", sequenceName = "answers_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answers_sequence")
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "answerset_id", referencedColumnName = "id")
-    private AnswerSets answerSet;
-
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private Questions questions;
+    private QuestionsEB questions;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "choice_id", referencedColumnName = "id")
-    private Choices choices;
+    private ChoicesEB choices;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "answerset_id", referencedColumnName = "id")
+    private AnswerSetsEB answerSets;
 
     public Long getId() {
         return id;
@@ -36,27 +36,27 @@ public class Answers {
         this.id = id;
     }
 
-    public AnswerSets getAnswerSet() {
-        return answerSet;
+    public AnswerSetsEB getAnswerSet() {
+        return answerSets;
     }
 
-    public void setAnswerSet(AnswerSets answerSet) {
-        this.answerSet = answerSet;
+    public void setAnswerSet(AnswerSetsEB answerSet) {
+        this.answerSets = answerSet;
     }
 
-    public Questions getQuestions() {
+    public QuestionsEB getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Questions questions) {
+    public void setQuestions(QuestionsEB questions) {
         this.questions = questions;
     }
 
-    public Choices getChoices() {
+    public ChoicesEB getChoices() {
         return choices;
     }
 
-    public void setChoices(Choices choices) {
+    public void setChoices(ChoicesEB choices) {
         this.choices = choices;
     }
 }
