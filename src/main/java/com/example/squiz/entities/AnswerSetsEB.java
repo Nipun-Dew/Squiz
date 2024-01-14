@@ -6,29 +6,33 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
-@Entity @Table(name="t_answersets")
+@Entity
+@Table(name = "t_answersets")
 public class AnswerSetsEB {
     @Id
     @SequenceGenerator(name = "answersets_sequence", sequenceName = "answersets_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answersets_sequence")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private QuestionsEB questions;
 
-    @OneToOne(mappedBy = "answerSets")
-    private AnswersEB answers;
+    @OneToMany(mappedBy = "answerSets")
+    private Set<AnswersEB> answers;
 
     private Long userId;
     private LocalDateTime submitTime;
@@ -58,11 +62,11 @@ public class AnswerSetsEB {
         this.questions = questions;
     }
 
-    public AnswersEB getAnswers() {
+    public Set<AnswersEB> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(AnswersEB answers) {
+    public void setAnswers(Set<AnswersEB> answers) {
         this.answers = answers;
     }
 

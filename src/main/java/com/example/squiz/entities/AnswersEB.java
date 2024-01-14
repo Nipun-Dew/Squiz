@@ -6,25 +6,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-@Entity @Table(name="t_answers")
+@Entity
+@Table(name = "t_answers")
 public class AnswersEB {
-    @Id @SequenceGenerator(name = "answers_sequence", sequenceName = "answers_sequence", allocationSize = 1)
+    @Id
+    @SequenceGenerator(name = "answers_sequence", sequenceName = "answers_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answers_sequence")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private QuestionsEB questions;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "choice_id", referencedColumnName = "id")
     private ChoicesEB choices;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "answerset_id", referencedColumnName = "id")
     private AnswerSetsEB answerSets;
 

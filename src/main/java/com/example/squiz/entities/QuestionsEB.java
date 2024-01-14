@@ -6,28 +6,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-@Entity @Table(name="t_questions")
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "t_questions")
 public class QuestionsEB {
-    @Id @SequenceGenerator(name = "question_sequence", sequenceName = "question_sequence", allocationSize = 1)
+    @Id
+    @SequenceGenerator(name = "question_sequence", sequenceName = "question_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_sequence")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @OneToOne(mappedBy = "questions")
-    private AnswersEB answers;
+    @OneToMany(mappedBy = "questions")
+    private Set<AnswersEB> answers;
 
-    @OneToOne(mappedBy = "questions")
-    private ChoicesEB choices;
+    @OneToMany(mappedBy = "questions")
+    private Set<ChoicesEB> choices;
 
-    @OneToOne(mappedBy = "questions")
-    private AnswerSetsEB answerSets;
+    @OneToMany(mappedBy = "questions")
+    private Set<AnswerSetsEB> answerSets;
 
     private String questionNumber;
     private String question;
@@ -50,27 +56,27 @@ public class QuestionsEB {
         this.quiz = quiz;
     }
 
-    public AnswersEB getAnswers() {
+    public Set<AnswersEB> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(AnswersEB answers) {
+    public void setAnswers(Set<AnswersEB> answers) {
         this.answers = answers;
     }
 
-    public ChoicesEB getChoices() {
+    public Set<ChoicesEB> getChoices() {
         return choices;
     }
 
-    public void setChoices(ChoicesEB choices) {
+    public void setChoices(Set<ChoicesEB> choices) {
         this.choices = choices;
     }
 
-    public AnswerSetsEB getAnswerSets() {
+    public Set<AnswerSetsEB> getAnswerSets() {
         return answerSets;
     }
 
-    public void setAnswerSets(AnswerSetsEB answerSets) {
+    public void setAnswerSets(Set<AnswerSetsEB> answerSets) {
         this.answerSets = answerSets;
     }
 

@@ -6,22 +6,28 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
-@Entity @Table(name="t_choices")
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "t_choices")
 public class ChoicesEB {
-    @Id @SequenceGenerator(name = "choices_sequence", sequenceName = "choices_sequence", allocationSize = 1)
+    @Id
+    @SequenceGenerator(name = "choices_sequence", sequenceName = "choices_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "choices_sequence")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private QuestionsEB questions;
 
-    @OneToOne(mappedBy = "choices")
-    private AnswersEB answers;
+    @OneToMany(mappedBy = "choices")
+    private Set<AnswersEB> answers;
 
     private String choiceNumber;
     private String choiceText;
@@ -45,11 +51,11 @@ public class ChoicesEB {
         this.questions = questions;
     }
 
-    public AnswersEB getAnswers() {
+    public Set<AnswersEB> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(AnswersEB answers) {
+    public void setAnswers(Set<AnswersEB> answers) {
         this.answers = answers;
     }
 

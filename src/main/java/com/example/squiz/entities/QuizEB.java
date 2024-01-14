@@ -4,23 +4,26 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
-@Entity @Table(name="t_quiz")
+@Entity
+@Table(name = "t_quiz")
 public class QuizEB {
-    @Id @SequenceGenerator(name = "quiz_sequence", sequenceName = "quiz_sequence", allocationSize = 1)
+    @Id
+    @SequenceGenerator(name = "quiz_sequence", sequenceName = "quiz_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_sequence")
     private Long id;
 
-    @OneToOne(mappedBy = "quiz")
-    private QuestionsEB questions;
+    @OneToMany(mappedBy = "quiz")
+    private Set<QuestionsEB> questions;
 
-    @OneToOne(mappedBy = "quiz")
-    private AnswerSetsEB answerSets;
+    @OneToMany(mappedBy = "quiz")
+    private Set<AnswerSetsEB> answerSets;
 
     private Integer creatorId;
     private LocalDateTime createdDate;
@@ -37,19 +40,19 @@ public class QuizEB {
         this.id = id;
     }
 
-    public QuestionsEB getQuestions() {
+    public Set<QuestionsEB> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(QuestionsEB questions) {
+    public void setQuestions(Set<QuestionsEB> questions) {
         this.questions = questions;
     }
 
-    public AnswerSetsEB getAnswerSets() {
+    public Set<AnswerSetsEB> getAnswerSets() {
         return answerSets;
     }
 
-    public void setAnswerSets(AnswerSetsEB answerSets) {
+    public void setAnswerSets(Set<AnswerSetsEB> answerSets) {
         this.answerSets = answerSets;
     }
 
