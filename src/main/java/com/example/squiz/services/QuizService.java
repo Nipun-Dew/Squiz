@@ -1,6 +1,6 @@
 package com.example.squiz.services;
 
-import com.example.squiz.daos.QuizRepository;
+import com.example.squiz.repos.QuizRepository;
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.entities.QuizEB;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.Long.parseLong;
 
