@@ -26,15 +26,11 @@ public class AnswerSetsEB {
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private QuestionsEB questions;
-
     @OneToMany(mappedBy = "answerSets")
     private Set<AnswersEB> answers;
 
     private Long userId;
-    private LocalDateTime submitTime;
+    private LocalDateTime startTime;
     private Integer duration;
 
     public Long getId() {
@@ -53,14 +49,6 @@ public class AnswerSetsEB {
         this.quiz = quiz;
     }
 
-    public QuestionsEB getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(QuestionsEB questions) {
-        this.questions = questions;
-    }
-
     public Set<AnswersEB> getAnswers() {
         return answers;
     }
@@ -77,12 +65,12 @@ public class AnswerSetsEB {
         this.userId = userId;
     }
 
-    public LocalDateTime getSubmitTime() {
-        return submitTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setSubmitTime(LocalDateTime submitTime) {
-        this.submitTime = submitTime;
+    public void setStartTime(LocalDateTime submitTime) {
+        this.startTime = submitTime;
     }
 
     public Integer getDuration() {

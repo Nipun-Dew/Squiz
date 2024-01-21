@@ -31,9 +31,6 @@ public class QuestionsEB {
     @OneToMany(mappedBy = "questions")
     private Set<ChoicesEB> choices;
 
-    @OneToMany(mappedBy = "questions")
-    private Set<AnswerSetsEB> answerSets;
-
     private String questionNumber;
     private String question;
     private Boolean attachments;
@@ -69,14 +66,6 @@ public class QuestionsEB {
 
     public void setChoices(Set<ChoicesEB> choices) {
         this.choices = choices;
-    }
-
-    public Set<AnswerSetsEB> getAnswerSets() {
-        return answerSets;
-    }
-
-    public void setAnswerSets(Set<AnswerSetsEB> answerSets) {
-        this.answerSets = answerSets;
     }
 
     public String getQuestionNumber() {
