@@ -2,7 +2,10 @@ package com.example.squiz.controllers;
 
 import com.example.squiz.dtos.AnswerSetRequest;
 import com.example.squiz.dtos.AnswerSetResponse;
+import com.example.squiz.dtos.AnswersRequest;
+import com.example.squiz.dtos.AnswersResponse;
 import com.example.squiz.services.AnswerSetService;
+import com.example.squiz.services.AnswersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +21,13 @@ import java.util.List;
 @RequestMapping(path = "${api.prefix}")
 public class AnswerController {
     private final AnswerSetService answerSetService;
+    private final AnswersService answerService;
 
     @Autowired
-    public AnswerController(AnswerSetService answerSetService) {
+    public AnswerController(AnswerSetService answerSetService,
+                            AnswersService answerService) {
         this.answerSetService = answerSetService;
+        this.answerService = answerService;
     }
 
     @GetMapping("/submission/{id}")
@@ -30,12 +36,27 @@ public class AnswerController {
     }
 
     @GetMapping("/submission/quiz/{quizId}")
-    public ResponseEntity<List<AnswerSetResponse>> getChoicesForQuestion(@PathVariable String quizId) {
+    public ResponseEntity<List<AnswerSetResponse>> getAnswerSetsForQuiz(@PathVariable String quizId) {
         return answerSetService.getAnswerSetsForQuiz(quizId);
     }
 
+    @GetMapping("/submission/answer/{id}")
+    public ResponseEntity<AnswersResponse> getAnswerById(@PathVariable String id) {
+        return answerService.getAnswer(id);
+    }
+
+    @GetMapping("/submission/answers/{answerSetId}")
+    public ResponseEntity<List<AnswersResponse>> getAnswersForAnswerSet(@PathVariable String answerSetId) {
+        return answerService.getAnswersForAnswerSet(answerSetId);
+    }
+
     @PostMapping("/submission")
-    public ResponseEntity<Integer> createChoice(@RequestBody AnswerSetRequest answerSetRequest) {
+    public ResponseEntity<Integer> createSubmission(@RequestBody AnswerSetRequest answerSetRequest) {
         return answerSetService.createNewAnswerSet(answerSetRequest);
+    }
+
+    @PostMapping("/submission/answer")
+    public ResponseEntity<Integer> createAnswer(@RequestBody AnswersRequest answerRequest) {
+        return answerService.createNewAnswer(answerRequest);
     }
 }

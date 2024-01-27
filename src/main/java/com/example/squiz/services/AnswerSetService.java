@@ -24,18 +24,15 @@ import java.util.Optional;
 public class AnswerSetService {
     private final AnswerSetRepository answerSetRepository;
     private final QuizRepository quizRepository;
-    private final QuestionsRepository questionsRepository;
 
     private final AnswerSetResponse answerSetResponse;
 
     @Autowired
     public AnswerSetService(AnswerSetRepository answerSetRepository,
                             QuizRepository quizRepository,
-                            QuestionsRepository questionsRepository,
                             AnswerSetResponse answerSetResponse) {
         this.answerSetRepository = answerSetRepository;
         this.quizRepository = quizRepository;
-        this.questionsRepository = questionsRepository;
         this.answerSetResponse = answerSetResponse;
     }
 

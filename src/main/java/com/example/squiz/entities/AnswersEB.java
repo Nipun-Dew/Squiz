@@ -10,6 +10,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "t_answers")
 public class AnswersEB {
@@ -29,6 +31,8 @@ public class AnswersEB {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "answerset_id", referencedColumnName = "id")
     private AnswerSetsEB answerSets;
+
+    private LocalDateTime submitTime;
 
     public Long getId() {
         return id;
@@ -60,5 +64,13 @@ public class AnswersEB {
 
     public void setChoices(ChoicesEB choices) {
         this.choices = choices;
+    }
+
+    public LocalDateTime getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(LocalDateTime submitTime) {
+        this.submitTime = submitTime;
     }
 }
