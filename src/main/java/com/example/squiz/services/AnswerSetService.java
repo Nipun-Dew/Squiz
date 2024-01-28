@@ -29,11 +29,10 @@ public class AnswerSetService {
 
     @Autowired
     public AnswerSetService(AnswerSetRepository answerSetRepository,
-                            QuizRepository quizRepository,
-                            AnswerSetResponse answerSetResponse) {
+                            QuizRepository quizRepository) {
         this.answerSetRepository = answerSetRepository;
         this.quizRepository = quizRepository;
-        this.answerSetResponse = answerSetResponse;
+        this.answerSetResponse = new AnswerSetResponse();
     }
 
     public ResponseEntity<AnswerSetResponse> getAnswerSet(String id) {

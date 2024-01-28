@@ -1,29 +1,26 @@
 package com.example.squiz.dtos;
 
 import com.example.squiz.entities.AnswersEB;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
 public class AnswersResponse {
     private Integer questionId;
     private Integer choiceId;
     private Integer answerSetId;
     private LocalDateTime submitTime;
 
-    public Integer getQuestionId() {
-        return questionId;
+    public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
+        this.setQuestionId(answerEntity.getQuestions().getId().intValue());
+        this.setQuestionId(answerEntity.getChoices().getId().intValue());
+        this.setQuestionId(answerEntity.getAnswerSet().getId().intValue());
+        this.setSubmitTime(answerEntity.getSubmitTime());
+
+        return this;
     }
 
-    public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
-        AnswersResponse response = new AnswersResponse();
-        response.setQuestionId(answerEntity.getQuestions().getId().intValue());
-        response.setQuestionId(answerEntity.getChoices().getId().intValue());
-        response.setQuestionId(answerEntity.getAnswerSet().getId().intValue());
-        response.setSubmitTime(answerEntity.getSubmitTime());
-
-        return response;
+    public Integer getQuestionId() {
+        return questionId;
     }
 
     public void setQuestionId(Integer questionId) {

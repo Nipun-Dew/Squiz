@@ -24,11 +24,10 @@ public class ChoiceService {
 
     @Autowired
     public ChoiceService(ChoiceRepository choiceRepository,
-                         QuestionsRepository questionsRepository,
-                         ChoiceResponse choiceResponse) {
+                         QuestionsRepository questionsRepository) {
         this.choiceRepository = choiceRepository;
         this.questionsRepository = questionsRepository;
-        this.choiceResponse = choiceResponse;
+        this.choiceResponse = new ChoiceResponse();
     }
 
     public ResponseEntity<ChoiceResponse> getChoice(String id) {

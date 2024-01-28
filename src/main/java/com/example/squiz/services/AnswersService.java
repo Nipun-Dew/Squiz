@@ -32,13 +32,12 @@ public class AnswersService {
     public AnswersService(AnswersRepository answersRepository,
                           QuestionsRepository questionsRepository,
                           ChoiceRepository choiceRepository,
-                          AnswerSetRepository answerSetRepository,
-                          AnswersResponse answerResponse) {
+                          AnswerSetRepository answerSetRepository) {
         this.answersRepository = answersRepository;
         this.questionsRepository = questionsRepository;
         this.choiceRepository = choiceRepository;
         this.answerSetRepository = answerSetRepository;
-        this.answerResponse = answerResponse;
+        this.answerResponse = new AnswersResponse();
     }
 
     public ResponseEntity<AnswersResponse> getAnswer(String id) {

@@ -22,9 +22,9 @@ public class QuizService {
     private final QuizResponse quizResponse;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, QuizResponse quizResponse) {
+    public QuizService(QuizRepository quizRepository) {
         this.quizRepository = quizRepository;
-        this.quizResponse = quizResponse;
+        this.quizResponse = new QuizResponse();
     }
 
     public ResponseEntity<QuizResponse> getQuiz(String id) {

@@ -1,11 +1,9 @@
 package com.example.squiz.dtos;
 
 import com.example.squiz.entities.AnswerSetsEB;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
 public class AnswerSetResponse {
     private Integer id;
     private Integer quizId;
@@ -17,14 +15,13 @@ public class AnswerSetResponse {
     }
 
     public AnswerSetResponse createAnswerSetResponse(AnswerSetsEB answerSetEntity) {
-        AnswerSetResponse response = new AnswerSetResponse();
-        response.setId(answerSetEntity.getId().intValue());
-        response.setQuizId(answerSetEntity.getQuiz().getId().intValue());
-        response.setUserId(answerSetEntity.getUserId());
-        response.setStartTime(answerSetEntity.getStartTime());
-        response.setDuration(answerSetEntity.getDuration());
+        this.setId(answerSetEntity.getId().intValue());
+        this.setQuizId(answerSetEntity.getQuiz().getId().intValue());
+        this.setUserId(answerSetEntity.getUserId());
+        this.setStartTime(answerSetEntity.getStartTime());
+        this.setDuration(answerSetEntity.getDuration());
 
-        return response;
+        return this;
     }
 
     public Integer getId() {
