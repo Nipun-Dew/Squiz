@@ -1,9 +1,7 @@
 package com.example.squiz.dtos;
 
 import com.example.squiz.entities.ChoicesEB;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ChoiceResponse {
     private Integer id;
     private Integer questionId;
@@ -17,16 +15,15 @@ public class ChoiceResponse {
     }
 
     public ChoiceResponse createChoiceResponse(ChoicesEB choicesEntity) {
-        ChoiceResponse response = new ChoiceResponse();
-        response.setId(choicesEntity.getId().intValue());
-        response.setQuestionId(choicesEntity.getQuestions().getId().intValue());
-        response.setChoiceNumber(choicesEntity.getChoiceNumber());
-        response.setChoiceText(choicesEntity.getChoiceText());
-        response.setHelperText(choicesEntity.getHelperText());
-        response.setAttachments(choicesEntity.getAttachments());
-        response.setCorrectAnswer(choicesEntity.getCorrectAnswer());
+        this.setId(choicesEntity.getId().intValue());
+        this.setQuestionId(choicesEntity.getQuestions().getId().intValue());
+        this.setChoiceNumber(choicesEntity.getChoiceNumber());
+        this.setChoiceText(choicesEntity.getChoiceText());
+        this.setHelperText(choicesEntity.getHelperText());
+        this.setAttachments(choicesEntity.getAttachments());
+        this.setCorrectAnswer(choicesEntity.getCorrectAnswer());
 
-        return response;
+        return this;
     }
 
     public Integer getId() {

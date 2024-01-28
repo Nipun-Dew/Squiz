@@ -1,9 +1,7 @@
 package com.example.squiz.dtos;
 
 import com.example.squiz.entities.QuestionsEB;
-import org.springframework.stereotype.Component;
 
-@Component
 public class QuestionsResponse {
     private Integer id;
     private Integer quizId;
@@ -16,15 +14,14 @@ public class QuestionsResponse {
     }
 
     public QuestionsResponse createQuestionsResponse(QuestionsEB questionEntity) {
-        QuestionsResponse response = new QuestionsResponse();
-        response.setId(questionEntity.getId().intValue());
-        response.setQuizId(questionEntity.getQuiz().getId().intValue());
-        response.setQuestionNumber(questionEntity.getQuestionNumber());
-        response.setQuestion(questionEntity.getQuestion());
-        response.setAttachments(questionEntity.getAttachments());
-        response.setAllocatedTime(questionEntity.getAllocatedTime());
+        this.setId(questionEntity.getId().intValue());
+        this.setQuizId(questionEntity.getQuiz().getId().intValue());
+        this.setQuestionNumber(questionEntity.getQuestionNumber());
+        this.setQuestion(questionEntity.getQuestion());
+        this.setAttachments(questionEntity.getAttachments());
+        this.setAllocatedTime(questionEntity.getAllocatedTime());
 
-        return response;
+        return this;
     }
 
     public Integer getId() {

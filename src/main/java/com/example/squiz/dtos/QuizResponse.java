@@ -1,11 +1,9 @@
 package com.example.squiz.dtos;
 
 import com.example.squiz.entities.QuizEB;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
 public class QuizResponse {
     private Integer id;
     private Integer creatorId;
@@ -19,16 +17,15 @@ public class QuizResponse {
     }
 
     public QuizResponse createQuizResponse(QuizEB quizEntity) {
-        QuizResponse response = new QuizResponse();
-        response.setId(quizEntity.getId().intValue());
-        response.setCreatorId(quizEntity.getCreatorId());
-        response.setCreatedDate(quizEntity.getCreatedDate());
-        response.setModifiedDate(quizEntity.getModifiedDate());
-        response.setTimeDuration(quizEntity.getTimeDuration());
-        response.setState(quizEntity.getState());
-        response.setDueDate(quizEntity.getDueDate());
+        this.setId(quizEntity.getId().intValue());
+        this.setCreatorId(quizEntity.getCreatorId());
+        this.setCreatedDate(quizEntity.getCreatedDate());
+        this.setModifiedDate(quizEntity.getModifiedDate());
+        this.setTimeDuration(quizEntity.getTimeDuration());
+        this.setState(quizEntity.getState());
+        this.setDueDate(quizEntity.getDueDate());
 
-        return response;
+        return this;
     }
 
     public Integer getId() {

@@ -26,11 +26,10 @@ public class QuestionsService {
 
     @Autowired
     public QuestionsService(QuestionsRepository questionsRepository,
-                            QuestionsResponse questionsResponse,
                             QuizRepository quizRepository) {
         this.questionsRepository = questionsRepository;
         this.quizRepository = quizRepository;
-        this.questionsResponse = questionsResponse;
+        this.questionsResponse = new QuestionsResponse();
     }
 
     public ResponseEntity<QuestionsResponse> getQuestion(String id) {
