@@ -5,6 +5,7 @@ import com.example.squiz.dtos.ChoiceResponse;
 import com.example.squiz.services.ChoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,16 +26,19 @@ public class ChoiceController {
     }
 
     @GetMapping("/choice/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ChoiceResponse> getChoiceById(@PathVariable String id) {
         return choiceService.getChoice(id);
     }
 
     @GetMapping("/choice/question/{questionId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<ChoiceResponse>> getChoicesForQuestion(@PathVariable String questionId) {
         return choiceService.getChoicesForQuestion(questionId);
     }
 
     @PostMapping("/choice")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createChoice(@RequestBody ChoiceRequest choiceRequest) {
         return choiceService.createNewChoice(choiceRequest);
     }

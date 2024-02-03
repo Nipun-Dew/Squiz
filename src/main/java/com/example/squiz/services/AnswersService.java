@@ -74,7 +74,8 @@ public class AnswersService {
         try {
             List<AnswersEB> results = answersRepository.getAnswersForAnswerSet(Long.parseLong(answerSetId));
             List<AnswersResponse> answersResponses = results.stream()
-                    .map(answerResponse::createAnswerResponse).toList();
+                    .map(result -> new AnswersResponse().createAnswerResponse(result))
+                    .toList();
             return ResponseEntity.ok(answersResponses);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -8,6 +8,7 @@ import com.example.squiz.services.AnswerSetService;
 import com.example.squiz.services.AnswersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,31 +32,37 @@ public class AnswerController {
     }
 
     @GetMapping("/submission/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<AnswerSetResponse> getAnswerSetById(@PathVariable String id) {
         return answerSetService.getAnswerSet(id);
     }
 
     @GetMapping("/submission/quiz/{quizId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<AnswerSetResponse>> getAnswerSetsForQuiz(@PathVariable String quizId) {
         return answerSetService.getAnswerSetsForQuiz(quizId);
     }
 
     @GetMapping("/submission/answer/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<AnswersResponse> getAnswerById(@PathVariable String id) {
         return answerService.getAnswer(id);
     }
 
     @GetMapping("/submission/answers/{answerSetId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<AnswersResponse>> getAnswersForAnswerSet(@PathVariable String answerSetId) {
         return answerService.getAnswersForAnswerSet(answerSetId);
     }
 
     @PostMapping("/submission")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createSubmission(@RequestBody AnswerSetRequest answerSetRequest) {
         return answerSetService.createNewAnswerSet(answerSetRequest);
     }
 
     @PostMapping("/submission/answer")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createAnswer(@RequestBody AnswersRequest answerRequest) {
         return answerService.createNewAnswer(answerRequest);
     }

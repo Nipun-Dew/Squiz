@@ -5,6 +5,7 @@ import com.example.squiz.dtos.QuestionsResponse;
 import com.example.squiz.services.QuestionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,16 +26,19 @@ public class QuestionsController {
     }
 
     @GetMapping("/question/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<QuestionsResponse> getQuestionById(@PathVariable String id) {
         return questionsService.getQuestion(id);
     }
 
     @GetMapping("/question/quiz/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<QuestionsResponse>> getQuestionsForQuiz(@PathVariable String id) {
         return questionsService.findQuestionsByQuiz(id);
     }
 
     @PostMapping("/question")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createQuestion(@RequestBody QuestionsRequest question) {
         return questionsService.createNewQuestion(question);
     }

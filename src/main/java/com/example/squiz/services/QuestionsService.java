@@ -58,7 +58,8 @@ public class QuestionsService {
         try {
             List<QuestionsEB> results = questionsRepository.findQuestionsByQuiz(Long.parseLong(quizId));
             List<QuestionsResponse> questionResponses = results.stream()
-                    .map(questionsResponse::createQuestionsResponse).toList();
+                    .map(result -> new QuestionsResponse().createQuestionsResponse(result))
+                    .toList();
             return ResponseEntity.ok(questionResponses);
         } catch (Exception e) {
             System.out.println(e.getMessage());
