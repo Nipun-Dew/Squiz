@@ -1,9 +1,9 @@
 package com.example.squiz.services;
 
-import com.example.squiz.repos.QuizRepository;
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.entities.QuizEB;
+import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,9 @@ public class QuizService {
     public ResponseEntity<List<QuizResponse>> findQuizForCreator(Integer creatorId) {
         try {
             List<QuizEB> quizzes = quizRepository.findQuizForCreator(creatorId);
-            List<QuizResponse> quizResponses = quizzes.stream().map(quizResponse::createQuizResponse).toList();
+            List<QuizResponse> quizResponses = quizzes.stream()
+                    .map(result -> new QuizResponse().createQuizResponse(result))
+                    .toList();
             return ResponseEntity.ok(quizResponses);
         } catch (Exception e) {
             System.out.println(e.getMessage());

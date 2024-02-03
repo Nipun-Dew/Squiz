@@ -2,14 +2,9 @@ package com.example.squiz.services;
 
 import com.example.squiz.dtos.AnswerSetRequest;
 import com.example.squiz.dtos.AnswerSetResponse;
-import com.example.squiz.dtos.ChoiceRequest;
-import com.example.squiz.dtos.ChoiceResponse;
 import com.example.squiz.entities.AnswerSetsEB;
-import com.example.squiz.entities.ChoicesEB;
-import com.example.squiz.entities.QuestionsEB;
 import com.example.squiz.entities.QuizEB;
 import com.example.squiz.repos.AnswerSetRepository;
-import com.example.squiz.repos.QuestionsRepository;
 import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,7 +59,8 @@ public class AnswerSetService {
         try {
             List<AnswerSetsEB> results = answerSetRepository.getAnswerSetsForQuiz(Long.parseLong(quizId));
             List<AnswerSetResponse> answerSetResponses = results.stream()
-                    .map(answerSetResponse::createAnswerSetResponse).toList();
+                    .map(result -> new AnswerSetResponse().createAnswerSetResponse(result))
+                    .toList();
             return ResponseEntity.ok(answerSetResponses);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -12,8 +12,8 @@ public class AnswersResponse {
 
     public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
         this.setQuestionId(answerEntity.getQuestions().getId().intValue());
-        this.setQuestionId(answerEntity.getChoices().getId().intValue());
-        this.setQuestionId(answerEntity.getAnswerSet().getId().intValue());
+        this.setChoiceId(answerEntity.getChoices().getId().intValue());
+        this.setAnswerSetId(answerEntity.getAnswerSet().getId().intValue());
         this.setSubmitTime(answerEntity.getSubmitTime());
 
         return this;

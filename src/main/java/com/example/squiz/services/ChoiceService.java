@@ -56,7 +56,9 @@ public class ChoiceService {
     public ResponseEntity<List<ChoiceResponse>> getChoicesForQuestion(String questionId) {
         try {
             List<ChoicesEB> results = choiceRepository.getChoicesForQuestion(Long.parseLong(questionId));
-            List<ChoiceResponse> choiceResponses = results.stream().map(choiceResponse::createChoiceResponse).toList();
+            List<ChoiceResponse> choiceResponses = results.stream()
+                    .map(result -> new ChoiceResponse().createChoiceResponse(result))
+                    .toList();
             return ResponseEntity.ok(choiceResponses);
         } catch (Exception e) {
             System.out.println(e.getMessage());
