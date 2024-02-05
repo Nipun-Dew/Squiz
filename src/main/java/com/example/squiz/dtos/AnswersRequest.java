@@ -17,11 +17,15 @@ public class AnswersRequest {
 
     public AnswersEB createAnswerEntity(QuestionsEB questionEntity,
                                         ChoicesEB choiceEntity,
-                                        AnswerSetsEB answerSetEntity) {
+                                        AnswerSetsEB answerSetEntity,
+                                        Boolean isCorrectAnswer,
+                                        String correctAnswer) {
         AnswersEB newAnswer = new AnswersEB();
         newAnswer.setQuestions(questionEntity);
         newAnswer.setChoices(choiceEntity);
         newAnswer.setAnswerSet(answerSetEntity);
+        newAnswer.setIsCorrectAnswer(isCorrectAnswer);
+        newAnswer.setCorrectAnswer(correctAnswer);
         newAnswer.setSubmitTime(LocalDateTime.now());
 
         return newAnswer;
