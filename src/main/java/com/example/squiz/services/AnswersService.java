@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -60,8 +61,19 @@ public class AnswersService {
                     .orElseThrow();
             AnswerSetsEB answerSetEntity = answerSetRepository.findById(answerRequest.getAnswerSetId().longValue())
                     .orElseThrow();
+            List<ChoicesEB> choices = choiceRepository.getChoicesForQuestion(questionEntity.getId());
+
+            String correctAnswer = Objects.requireNonNull(choices.stream()
+                            .filter(ChoicesEB::getCorrectAnswer)
+                            .findAny()
+                            .orElse(null))
+                    .getChoiceText();
+
             AnswersEB savedAnswer = answersRepository.save(answerRequest.createAnswerEntity(questionEntity,
-                    choiceEntity, answerSetEntity));
+                    choiceEntity,
+                    answerSetEntity,
+                    choiceEntity.getCorrectAnswer(),
+                    correctAnswer));
 
             return ResponseEntity.ok(savedAnswer.getId().intValue());
         } catch (Exception e) {

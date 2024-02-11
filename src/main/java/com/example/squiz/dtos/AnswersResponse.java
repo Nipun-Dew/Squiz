@@ -9,12 +9,16 @@ public class AnswersResponse {
     private Integer choiceId;
     private Integer answerSetId;
     private LocalDateTime submitTime;
+    private Boolean isCorrectAnswer;
+    private String correctAnswer;
 
     public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
         this.setQuestionId(answerEntity.getQuestions().getId().intValue());
         this.setChoiceId(answerEntity.getChoices().getId().intValue());
         this.setAnswerSetId(answerEntity.getAnswerSet().getId().intValue());
         this.setSubmitTime(answerEntity.getSubmitTime());
+        this.setCorrectAnswer(answerEntity.getCorrectAnswer());
+        this.setIsCorrectAnswer(answerEntity.getIsCorrectAnswer());
 
         return this;
     }
@@ -49,6 +53,22 @@ public class AnswersResponse {
 
     public void setSubmitTime(LocalDateTime submitTime) {
         this.submitTime = submitTime;
+    }
+
+    public Boolean getIsCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public void setIsCorrectAnswer(Boolean isCorrectAnswer) {
+        this.isCorrectAnswer = isCorrectAnswer;
     }
 
     public AnswersResponse() {

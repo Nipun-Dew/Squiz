@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "${api.prefix}")
 public class AuthController {
@@ -31,16 +34,22 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/addNewUser")
-    public ResponseEntity<String> addNewUser(@RequestBody UserInfoEB userInfo) {
-        return ResponseEntity.ok(userInfoService.addUser(userInfo));
+    @PostMapping("/auth/addNewUser")
+    public ResponseEntity<Map<String, String>> addNewUser(@RequestBody UserInfoEB userInfo) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", userInfoService.addUser(userInfo));
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getUserPassword()));
+    @PostMapping("/auth/generateToken")
+    public ResponseEntity<Map<String, String>> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUserName(),
+                        authRequest.getUserPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUserName());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", jwtService.generateToken(authRequest.getUserName()));
+            return ResponseEntity.ok(response);
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
