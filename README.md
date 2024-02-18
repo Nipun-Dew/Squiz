@@ -4,7 +4,7 @@
 
 ## How to run in Local Environment
 
-* Run docker compose file in the test folder `docker-compose up`
+* Run docker compose file `docker-compose up`
 * Connect to dockerized db and create a db `CREATE DATABASE squiz;`
 * Add following configs to application properties
     * `spring.datasource.url=jdbc:postgresql://localhost:5432/postgres`
