@@ -3,8 +3,10 @@ package com.example.squiz.services;
 import com.example.squiz.dtos.AnswerSetRequest;
 import com.example.squiz.dtos.AnswerSetResponse;
 import com.example.squiz.entities.AnswerSetsEB;
+import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.QuizEB;
 import com.example.squiz.repos.AnswerSetRepository;
+import com.example.squiz.repos.AnswersRepository;
 import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +21,16 @@ import java.util.Optional;
 public class AnswerSetService {
     private final AnswerSetRepository answerSetRepository;
     private final QuizRepository quizRepository;
+    private final AnswersRepository answersRepository;
 
     private final AnswerSetResponse answerSetResponse;
 
     @Autowired
     public AnswerSetService(AnswerSetRepository answerSetRepository,
-                            QuizRepository quizRepository) {
+                            QuizRepository quizRepository, AnswersRepository answersRepository) {
         this.answerSetRepository = answerSetRepository;
         this.quizRepository = quizRepository;
+        this.answersRepository = answersRepository;
         this.answerSetResponse = new AnswerSetResponse();
     }
 
@@ -65,6 +69,18 @@ public class AnswerSetService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+        }
+    }
+
+    public ResponseEntity<Integer> getPointsForAnswerSet(String answerSetId) {
+        try {
+            List<AnswersEB> results = answersRepository.getAnswersForAnswerSet(Long.parseLong(answerSetId));
+            Integer points = results.stream().filter(AnswersEB::getIsCorrectAnswer).toList().size();
+
+            return ResponseEntity.ok(points);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
         }
     }
 }
