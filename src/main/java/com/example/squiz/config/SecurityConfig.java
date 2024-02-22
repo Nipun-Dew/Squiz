@@ -3,6 +3,7 @@ package com.example.squiz.config;
 import com.example.squiz.auth.JwtAuthFilter;
 import com.example.squiz.services.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -25,8 +25,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    private final JwtAuthFilter authFilter;
+    private final String apiPrefix;
+
     @Autowired
-    private JwtAuthFilter authFilter;
+    public SecurityConfig(JwtAuthFilter authFilter,
+                          @Value("${api.prefix}") String apiPrefix) {
+        this.authFilter = authFilter;
+        this.apiPrefix = apiPrefix + "/auth";
+    }
 
     // User Creation
     @Bean
@@ -39,7 +46,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/squiz/v1/welcome", "/api/squiz/v1/addNewUser", "/api/squiz/v1/generateToken").permitAll()
+                        .requestMatchers(
+                                apiPrefix + "/addNewUser",
+                                apiPrefix + "/generateToken").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

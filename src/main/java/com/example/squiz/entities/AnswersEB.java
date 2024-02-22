@@ -34,6 +34,10 @@ public class AnswersEB {
 
     private LocalDateTime submitTime;
 
+    private Boolean isCorrectAnswer;
+
+    private String correctAnswer;
+
     public Long getId() {
         return id;
     }
@@ -72,5 +76,21 @@ public class AnswersEB {
 
     public void setSubmitTime(LocalDateTime submitTime) {
         this.submitTime = submitTime;
+    }
+
+    public Boolean getIsCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public void setIsCorrectAnswer(Boolean isCorrectAnswer) {
+        this.isCorrectAnswer = isCorrectAnswer;
     }
 }
