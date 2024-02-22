@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class QuizResponse {
     private Integer id;
-    private Integer creatorId;
+    private String creatorId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private Integer timeDuration;
@@ -36,11 +36,11 @@ public class QuizResponse {
         this.id = id;
     }
 
-    public Integer getCreatorId() {
+    public String getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(Integer creatorId) {
+    public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
     }
 
