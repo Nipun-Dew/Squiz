@@ -33,7 +33,8 @@ public class QuestionsEB {
 
     private String questionNumber;
     private String question;
-    private Boolean attachments;
+    private String imageUrl;
+    private String imageName;
     private Integer allocatedTime;
 
     public Long getId() {
@@ -84,16 +85,24 @@ public class QuestionsEB {
         this.question = question;
     }
 
-    public Boolean getAttachments() {
-        return attachments;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setAttachments(Boolean attachments) {
-        this.attachments = attachments;
+    public void setImageUrl(String attachments) {
+        this.imageUrl = attachments;
     }
 
     public Integer getAllocatedTime() {
         return allocatedTime;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public void setAllocatedTime(Integer allocatedTime) {

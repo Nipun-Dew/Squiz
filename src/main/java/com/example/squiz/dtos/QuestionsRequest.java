@@ -7,7 +7,7 @@ public class QuestionsRequest {
     private Integer quizId;
     private String questionNumber;
     private String question;
-    private Boolean attachments;
+    private String imageName;
     private Integer allocatedTime;
 
     public QuestionsRequest() {
@@ -18,7 +18,7 @@ public class QuestionsRequest {
         newQuestion.setQuiz(quizEntity);
         newQuestion.setQuestionNumber(questionNumber);
         newQuestion.setQuestion(question);
-        newQuestion.setAttachments(attachments);
+        newQuestion.setImageUrl(imageName);
         newQuestion.setAllocatedTime(allocatedTime);
 
         return newQuestion;
@@ -48,12 +48,12 @@ public class QuestionsRequest {
         this.question = question;
     }
 
-    public Boolean getAttachments() {
-        return attachments;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setAttachments(Boolean attachments) {
-        this.attachments = attachments;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public Integer getAllocatedTime() {

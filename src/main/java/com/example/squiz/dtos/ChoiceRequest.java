@@ -8,7 +8,8 @@ public class ChoiceRequest {
     private String choiceNumber;
     private String choiceText;
     private String helperText;
-    private Boolean attachments;
+    private String imageUrl;
+    private String imageName;
     private Boolean correctAnswer;
 
     public ChoiceRequest() {
@@ -20,7 +21,8 @@ public class ChoiceRequest {
         newChoice.setChoiceNumber(choiceNumber);
         newChoice.setChoiceText(choiceText);
         newChoice.setHelperText(helperText);
-        newChoice.setAttachments(attachments);
+        newChoice.setImageUrl(imageUrl);
+        newChoice.setImageName(imageName);
         newChoice.setCorrectAnswer(correctAnswer);
 
         return newChoice;
@@ -58,12 +60,12 @@ public class ChoiceRequest {
         this.helperText = helperText;
     }
 
-    public Boolean getAttachments() {
-        return attachments;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setAttachments(Boolean attachments) {
-        this.attachments = attachments;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getCorrectAnswer() {
@@ -72,5 +74,13 @@ public class ChoiceRequest {
 
     public void setCorrectAnswer(Boolean correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }
