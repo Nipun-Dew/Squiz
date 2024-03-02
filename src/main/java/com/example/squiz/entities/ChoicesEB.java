@@ -31,7 +31,8 @@ public class ChoicesEB {
     private String choiceNumber;
     private String choiceText;
     private String helperText;
-    private Boolean attachments;
+    private String imageUrl;
+    private String imageName;
     private Boolean correctAnswer;
 
     public Long getId() {
@@ -82,12 +83,12 @@ public class ChoicesEB {
         this.helperText = helperText;
     }
 
-    public Boolean getAttachments() {
-        return attachments;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setAttachments(Boolean attachments) {
-        this.attachments = attachments;
+    public void setImageUrl(String attachments) {
+        this.imageUrl = attachments;
     }
 
     public Boolean getCorrectAnswer() {
@@ -96,5 +97,13 @@ public class ChoicesEB {
 
     public void setCorrectAnswer(Boolean correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }

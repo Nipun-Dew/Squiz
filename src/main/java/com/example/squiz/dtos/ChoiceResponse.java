@@ -8,7 +8,8 @@ public class ChoiceResponse {
     private String choiceNumber;
     private String choiceText;
     private String helperText;
-    private Boolean attachments;
+    private String imageUrl;
+    private String imageName;
     private Boolean correctAnswer;
 
     public ChoiceResponse() {
@@ -20,7 +21,8 @@ public class ChoiceResponse {
         this.setChoiceNumber(choicesEntity.getChoiceNumber());
         this.setChoiceText(choicesEntity.getChoiceText());
         this.setHelperText(choicesEntity.getHelperText());
-        this.setAttachments(choicesEntity.getAttachments());
+        this.setImageUrl(choicesEntity.getImageUrl());
+        this.setImageName(choicesEntity.getImageName());
         this.setCorrectAnswer(choicesEntity.getCorrectAnswer());
 
         return this;
@@ -66,12 +68,12 @@ public class ChoiceResponse {
         this.helperText = helperText;
     }
 
-    public Boolean getAttachments() {
-        return attachments;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setAttachments(Boolean attachments) {
-        this.attachments = attachments;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getCorrectAnswer() {
@@ -80,5 +82,13 @@ public class ChoiceResponse {
 
     public void setCorrectAnswer(Boolean correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }
