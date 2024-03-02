@@ -6,12 +6,9 @@ import com.example.squiz.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,7 +36,25 @@ public class QuizController {
 
     @PostMapping("/quiz")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Integer> createQuiz(@RequestBody QuizRequest quiz) {
-        return service.createNewQuiz(quiz);
+    public ResponseEntity<Integer> createQuiz(@RequestBody QuizRequest quiz, Authentication authentication) {
+//        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+//        return service.createNewQuiz(quiz, username);
+//        String username = ((UserInfoEB) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserName();
+
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User user = (User) authentication.getPrincipal();
+
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
+        }
+        System.out.println(username);
+
+        return service.createNewQuiz(quiz, username);
+//        System.out.println(user);
+//        service.createNewQuiz(quiz);
+////        return username;
+//        return new ResponseEntity<>(username, HttpStatus.OK);
     }
 }

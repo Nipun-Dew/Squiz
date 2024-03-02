@@ -13,9 +13,9 @@ public class QuizRequest {
     public QuizRequest() {
     }
 
-    public QuizEB createQuizEntity() {
+    public QuizEB createQuizEntity(String username) {
         QuizEB newQuiz = new QuizEB();
-        newQuiz.setCreatorId(Integer.parseInt(creatorId));
+        newQuiz.setCreatorId(username);
         newQuiz.setCreatedDate(LocalDateTime.now());
         newQuiz.setModifiedDate(LocalDateTime.now());
         newQuiz.setDueDate(LocalDateTime.parse(dueDate));

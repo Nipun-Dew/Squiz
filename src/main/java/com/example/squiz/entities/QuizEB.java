@@ -1,12 +1,6 @@
 package com.example.squiz.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -25,7 +19,7 @@ public class QuizEB {
     @OneToMany(mappedBy = "quiz")
     private Set<AnswerSetsEB> answerSets;
 
-    private Integer creatorId;
+    private String creatorId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private Integer timeDuration;
@@ -56,11 +50,11 @@ public class QuizEB {
         this.answerSets = answerSets;
     }
 
-    public Integer getCreatorId() {
+    public String getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(Integer creatorId) {
+    public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
     }
 

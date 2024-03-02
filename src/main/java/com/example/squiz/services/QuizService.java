@@ -38,9 +38,9 @@ public class QuizService {
         }
     }
 
-    public ResponseEntity<Integer> createNewQuiz(QuizRequest quizRequest) {
+    public ResponseEntity<Integer> createNewQuiz(QuizRequest quizRequest, String username) {
         try {
-            QuizEB savedQuiz = quizRepository.save(quizRequest.createQuizEntity());
+            QuizEB savedQuiz = quizRepository.save(quizRequest.createQuizEntity(username));
             return ResponseEntity.ok(savedQuiz.getId().intValue());
         } catch (Exception e) {
             System.out.println(e.getMessage());
