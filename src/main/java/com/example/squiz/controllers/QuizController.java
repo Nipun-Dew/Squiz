@@ -37,24 +37,13 @@ public class QuizController {
     @PostMapping("/quiz")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createQuiz(@RequestBody QuizRequest quiz, Authentication authentication) {
-//        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-//        return service.createNewQuiz(quiz, username);
-//        String username = ((UserInfoEB) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserName();
-
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = (User) authentication.getPrincipal();
 
         String username = null;
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             username = userDetails.getUsername();
         }
-        System.out.println(username);
 
         return service.createNewQuiz(quiz, username);
-//        System.out.println(user);
-//        service.createNewQuiz(quiz);
-////        return username;
-//        return new ResponseEntity<>(username, HttpStatus.OK);
     }
 }

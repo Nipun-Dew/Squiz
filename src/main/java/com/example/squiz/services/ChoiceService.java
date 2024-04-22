@@ -41,12 +41,21 @@ public class ChoiceService {
         }
     }
 
-    public ResponseEntity<Integer> createNewChoice(ChoiceRequest choiceRequest) {
+    public ResponseEntity<Integer> createNewChoice(ChoiceRequest choiceRequest, String username) {
         try {
+            ChoicesEB savedChoice;
             QuestionsEB questionEntity = questionsRepository.findById(choiceRequest.getQuestionId().longValue())
                     .orElseThrow();
-            ChoicesEB savedChoice = choiceRepository.save(choiceRequest.createChoiceEntity(questionEntity));
+            String creatorId = questionEntity.getQuiz().getCreatorId();
+
+            if (creatorId.equals(username)) {
+                savedChoice = choiceRepository.save(choiceRequest.createChoiceEntity(questionEntity));
+            } else {
+                throw new Exception("User not allowed to create a new choice");
+            }
+
             return ResponseEntity.ok(savedChoice.getId().intValue());
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);

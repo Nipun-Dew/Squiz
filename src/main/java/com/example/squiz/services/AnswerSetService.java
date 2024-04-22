@@ -46,12 +46,12 @@ public class AnswerSetService {
         }
     }
 
-    public ResponseEntity<Integer> createNewAnswerSet(AnswerSetRequest answerSetRequest) {
+    public ResponseEntity<Integer> createNewAnswerSet(AnswerSetRequest answerSetRequest, String username) {
         try {
             QuizEB quizEntity = quizRepository.findById(answerSetRequest.getQuizId().longValue())
                     .orElseThrow();
             AnswerSetsEB savedAnswerSet = answerSetRepository
-                    .save(answerSetRequest.createAnswerSetEntity(quizEntity));
+                    .save(answerSetRequest.createAnswerSetEntity(quizEntity, username));
             return ResponseEntity.ok(savedAnswerSet.getId().intValue());
         } catch (Exception e) {
             System.out.println(e.getMessage());

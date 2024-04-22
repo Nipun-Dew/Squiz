@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class AnswerSetResponse {
     private Integer id;
     private Integer quizId;
-    private Long userId;
+    private String creatorId;
     private LocalDateTime startTime;
     private Integer duration;
 
@@ -17,7 +17,7 @@ public class AnswerSetResponse {
     public AnswerSetResponse createAnswerSetResponse(AnswerSetsEB answerSetEntity) {
         this.setId(answerSetEntity.getId().intValue());
         this.setQuizId(answerSetEntity.getQuiz().getId().intValue());
-        this.setUserId(answerSetEntity.getUserId());
+        this.setCreatorId(answerSetEntity.getCreatorId());
         this.setStartTime(answerSetEntity.getStartTime());
         this.setDuration(answerSetEntity.getDuration());
 
@@ -40,12 +40,12 @@ public class AnswerSetResponse {
         this.quizId = quizId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     public LocalDateTime getStartTime() {

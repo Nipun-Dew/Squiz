@@ -53,27 +53,34 @@ public class AnswersService {
         }
     }
 
-    public ResponseEntity<Integer> createNewAnswer(AnswersRequest answerRequest) {
+    public ResponseEntity<Integer> createNewAnswer(AnswersRequest answerRequest, String username) {
         try {
-            QuestionsEB questionEntity = questionsRepository.findById(answerRequest.getQuestionId().longValue())
-                    .orElseThrow();
-            ChoicesEB choiceEntity = choiceRepository.findById(answerRequest.getChoiceId().longValue())
-                    .orElseThrow();
+            AnswersEB savedAnswer;
             AnswerSetsEB answerSetEntity = answerSetRepository.findById(answerRequest.getAnswerSetId().longValue())
                     .orElseThrow();
-            List<ChoicesEB> choices = choiceRepository.getChoicesForQuestion(questionEntity.getId());
+            String creatorId = answerSetEntity.getCreatorId();
 
-            String correctAnswer = Objects.requireNonNull(choices.stream()
-                            .filter(ChoicesEB::getCorrectAnswer)
-                            .findAny()
-                            .orElse(null))
-                    .getChoiceText();
+            if (creatorId.equals(username)) {
+                QuestionsEB questionEntity = questionsRepository.findById(answerRequest.getQuestionId().longValue())
+                        .orElseThrow();
 
-            AnswersEB savedAnswer = answersRepository.save(answerRequest.createAnswerEntity(questionEntity,
-                    choiceEntity,
-                    answerSetEntity,
-                    choiceEntity.getCorrectAnswer(),
-                    correctAnswer));
+                ChoicesEB choiceEntity = choiceRepository.findById(answerRequest.getChoiceId().longValue())
+                        .orElseThrow();
+
+                List<ChoicesEB> choices = choiceRepository.getChoicesForQuestion(questionEntity.getId());
+
+                String correctAnswer = Objects.requireNonNull(choices.stream().filter(ChoicesEB::getCorrectAnswer)
+                                .findAny().orElse(null)).getChoiceText();
+
+                savedAnswer = answersRepository.save(answerRequest.createAnswerEntity(questionEntity,
+                        choiceEntity,
+                        answerSetEntity,
+                        choiceEntity.getCorrectAnswer(),
+                        correctAnswer));
+
+            } else {
+                throw new Exception("User is not the creator of the relevant Answer set");
+            }
 
             return ResponseEntity.ok(savedAnswer.getId().intValue());
         } catch (Exception e) {

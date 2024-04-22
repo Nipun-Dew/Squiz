@@ -7,15 +7,14 @@ import java.time.LocalDateTime;
 
 public class AnswerSetRequest {
     private Integer quizId;
-    private Long userId;
 
     public AnswerSetRequest() {
     }
 
-    public AnswerSetsEB createAnswerSetEntity(QuizEB quizEntity) {
+    public AnswerSetsEB createAnswerSetEntity(QuizEB quizEntity, String username) {
         AnswerSetsEB newAnswerSet = new AnswerSetsEB();
         newAnswerSet.setQuiz(quizEntity);
-        newAnswerSet.setUserId(userId);
+        newAnswerSet.setCreatorId(username);
         newAnswerSet.setStartTime(LocalDateTime.now());
         newAnswerSet.setDuration(0);
 
@@ -28,13 +27,5 @@ public class AnswerSetRequest {
 
     public void setQuizId(Integer quizId) {
         this.quizId = quizId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }
