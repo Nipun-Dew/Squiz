@@ -43,11 +43,18 @@ public class QuestionsService {
         }
     }
 
-    public ResponseEntity<Integer> createNewQuestion(QuestionsRequest questionsRequest) {
+    public ResponseEntity<Integer> createNewQuestion(QuestionsRequest questionsRequest, String username) {
         try {
+            QuestionsEB savedQuestion;
             QuizEB quizEntity = quizRepository.findById(questionsRequest.getQuizId().longValue()).orElseThrow();
-            QuestionsEB savedQuestion = questionsRepository.save(questionsRequest.createQuestionEntity(quizEntity));
+
+            if(quizEntity.getCreatorId().equals(username)) {
+                savedQuestion = questionsRepository.save(questionsRequest.createQuestionEntity(quizEntity));
+            } else {
+                throw new Exception("User is not the creator of the relevant Quiz");
+            }
             return ResponseEntity.ok(savedQuestion.getId().intValue());
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);

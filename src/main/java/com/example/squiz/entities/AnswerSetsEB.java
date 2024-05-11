@@ -29,7 +29,7 @@ public class AnswerSetsEB {
     @OneToMany(mappedBy = "answerSets")
     private Set<AnswersEB> answers;
 
-    private Long userId;
+    private String creatorId;
     private LocalDateTime startTime;
     private Integer duration;
 
@@ -57,12 +57,12 @@ public class AnswerSetsEB {
         this.answers = answers;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     public LocalDateTime getStartTime() {

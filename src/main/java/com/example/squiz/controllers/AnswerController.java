@@ -6,9 +6,12 @@ import com.example.squiz.dtos.AnswersRequest;
 import com.example.squiz.dtos.AnswersResponse;
 import com.example.squiz.services.AnswerSetService;
 import com.example.squiz.services.AnswersService;
+import com.example.squiz.utils.UserDetailsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "${api.prefix}")
-public class AnswerController {
+public class AnswerController implements UserDetailsUtil {
     private final AnswerSetService answerSetService;
     private final AnswersService answerService;
 
@@ -57,13 +60,22 @@ public class AnswerController {
 
     @PostMapping("/submission")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Integer> createSubmission(@RequestBody AnswerSetRequest answerSetRequest) {
-        return answerSetService.createNewAnswerSet(answerSetRequest);
+    public ResponseEntity<Integer> createSubmission(@RequestBody AnswerSetRequest answerSetRequest,
+                                                    Authentication authentication) {
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            username = userDetails.getUsername();
+        }
+
+        return answerSetService.createNewAnswerSet(answerSetRequest, username);
     }
 
     @PostMapping("/submission/answer")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Integer> createAnswer(@RequestBody AnswersRequest answerRequest) {
-        return answerService.createNewAnswer(answerRequest);
+    public ResponseEntity<Integer> createAnswer(@RequestBody AnswersRequest answerRequest,
+                                                Authentication authentication) {
+
+        String username = extractUser(authentication);
+        return answerService.createNewAnswer(answerRequest, username);
     }
 }
