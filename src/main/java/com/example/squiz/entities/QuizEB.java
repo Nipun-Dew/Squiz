@@ -20,6 +20,8 @@ public class QuizEB {
     private Set<AnswerSetsEB> answerSets;
 
     private String creatorId;
+    private String title;
+    private String description;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private Integer timeDuration;
@@ -56,6 +58,22 @@ public class QuizEB {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getCreatedDate() {

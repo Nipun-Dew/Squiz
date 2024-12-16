@@ -3,6 +3,7 @@ package com.example.squiz.controllers;
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.services.QuizService;
+import com.example.squiz.utils.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @RestController
 @RequestMapping(path = "${api.prefix}")
-public class QuizController {
+public class QuizController implements AuthenticationUtil {
     private final QuizService service;
 
     @Autowired
@@ -28,10 +31,11 @@ public class QuizController {
         return service.getQuiz(id);
     }
 
-    @GetMapping("/quiz/creator/{id}")
+    @GetMapping("/quizzes")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<QuizResponse>> getQuizzesByCreator(@PathVariable String id) {
-        return service.findQuizForCreator(Integer.parseInt(id));
+    public ResponseEntity<List<QuizResponse>> getQuizzesForCreator(Authentication authentication) {
+        String username = getUsername(authentication);
+        return service.findQuizzesForUser(username);
     }
 
     @PostMapping("/quiz")

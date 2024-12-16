@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 public class QuizRequest {
     private String creatorId;
+    private String title;
+    private String description;
     private String timeDuration;
     private String state;
     private String dueDate;
@@ -16,6 +18,8 @@ public class QuizRequest {
     public QuizEB createQuizEntity(String username) {
         QuizEB newQuiz = new QuizEB();
         newQuiz.setCreatorId(username);
+        newQuiz.setTitle(title);
+        newQuiz.setDescription(description);
         newQuiz.setCreatedDate(LocalDateTime.now());
         newQuiz.setModifiedDate(LocalDateTime.now());
         newQuiz.setDueDate(LocalDateTime.parse(dueDate));
@@ -30,6 +34,22 @@ public class QuizRequest {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getTimeDuration() {

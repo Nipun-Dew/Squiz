@@ -48,9 +48,9 @@ public class QuizService {
         }
     }
 
-    public ResponseEntity<List<QuizResponse>> findQuizForCreator(Integer creatorId) {
+    public ResponseEntity<List<QuizResponse>> findQuizzesForUser(String username) {
         try {
-            List<QuizEB> quizzes = quizRepository.findQuizForCreator(creatorId);
+            List<QuizEB> quizzes = quizRepository.findQuizForCreator(username);
             List<QuizResponse> quizResponses = quizzes.stream()
                     .map(result -> new QuizResponse().createQuizResponse(result))
                     .toList();
