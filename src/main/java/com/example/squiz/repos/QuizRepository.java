@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuizRepository extends JpaRepository<QuizEB, Long> {
@@ -14,4 +15,7 @@ public interface QuizRepository extends JpaRepository<QuizEB, Long> {
             "LEFT JOIN FETCH q.questions " +
             "LEFT JOIN FETCH q.answerSets WHERE q.creatorId = :creatorId")
     List<QuizEB> findQuizForCreator(@Param("creatorId") String creatorId);
+
+    @Query("SELECT q FROM QuizEB q LEFT JOIN FETCH q.questions WHERE q.id = :quizId")
+    Optional<QuizEB> findQuizById(@Param("quizId") Long quizId);
 }

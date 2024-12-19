@@ -2,6 +2,7 @@ package com.example.squiz.controllers;
 
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
+import com.example.squiz.dtos.info.QuizInfoResponse;
 import com.example.squiz.services.QuizService;
 import com.example.squiz.utils.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping(path = "${api.prefix}")
@@ -27,7 +26,7 @@ public class QuizController implements AuthenticationUtil {
 
     @GetMapping("/quiz/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<QuizResponse> getQuizById(@PathVariable String id) {
+    public ResponseEntity<QuizInfoResponse> getQuizById(@PathVariable String id) {
         return service.getQuiz(id);
     }
 

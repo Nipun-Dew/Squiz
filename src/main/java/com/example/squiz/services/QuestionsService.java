@@ -2,6 +2,7 @@ package com.example.squiz.services;
 
 import com.example.squiz.dtos.QuestionsRequest;
 import com.example.squiz.dtos.QuestionsResponse;
+import com.example.squiz.dtos.info.QuestionsInfoResponse;
 import com.example.squiz.entities.QuestionsEB;
 import com.example.squiz.entities.QuizEB;
 import com.example.squiz.repos.QuestionsRepository;
@@ -22,24 +23,24 @@ public class QuestionsService {
     private final QuestionsRepository questionsRepository;
     private final QuizRepository quizRepository;
 
-    private final QuestionsResponse questionsResponse;
+    private final QuestionsInfoResponse questionsInfoResponse;
 
     @Autowired
     public QuestionsService(QuestionsRepository questionsRepository,
                             QuizRepository quizRepository) {
         this.questionsRepository = questionsRepository;
         this.quizRepository = quizRepository;
-        this.questionsResponse = new QuestionsResponse();
+        this.questionsInfoResponse = new QuestionsInfoResponse();
     }
 
-    public ResponseEntity<QuestionsResponse> getQuestion(String id) {
+    public ResponseEntity<QuestionsInfoResponse> getQuestionInfo(String id) {
         try {
-            Optional<QuestionsEB> optionalQuestion = questionsRepository.findById(parseLong(id));
+            Optional<QuestionsEB> optionalQuestionInfo = questionsRepository.findByQuestionId(parseLong(id));
 
-            return optionalQuestion.map(quiz -> ResponseEntity.ok(questionsResponse.createQuestionsResponse(quiz)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(questionsResponse));
+            return optionalQuestionInfo.map(question -> ResponseEntity.ok(questionsInfoResponse.createQuestionInfoResponse(question)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(questionsInfoResponse));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(questionsResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(questionsInfoResponse);
         }
     }
 
@@ -61,11 +62,11 @@ public class QuestionsService {
         }
     }
 
-    public ResponseEntity<List<QuestionsResponse>> findQuestionsByQuiz(String quizId) {
+    public ResponseEntity<List<QuestionsInfoResponse>> findQuestionsByQuiz(String quizId) {
         try {
             List<QuestionsEB> results = questionsRepository.findQuestionsByQuiz(Long.parseLong(quizId));
-            List<QuestionsResponse> questionResponses = results.stream()
-                    .map(result -> new QuestionsResponse().createQuestionsResponse(result))
+            List<QuestionsInfoResponse> questionResponses = results.stream()
+                    .map(result -> new QuestionsInfoResponse().createQuestionInfoResponse(result))
                     .toList();
             return ResponseEntity.ok(questionResponses);
         } catch (Exception e) {

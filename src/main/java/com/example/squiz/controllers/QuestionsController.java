@@ -1,7 +1,7 @@
 package com.example.squiz.controllers;
 
 import com.example.squiz.dtos.QuestionsRequest;
-import com.example.squiz.dtos.QuestionsResponse;
+import com.example.squiz.dtos.info.QuestionsInfoResponse;
 import com.example.squiz.services.QuestionsService;
 import com.example.squiz.utils.UserDetailsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +29,13 @@ public class QuestionsController implements UserDetailsUtil {
 
     @GetMapping("/question/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<QuestionsResponse> getQuestionById(@PathVariable String id) {
-        return questionsService.getQuestion(id);
+    public ResponseEntity<QuestionsInfoResponse> getQuestionById(@PathVariable String id) {
+        return questionsService.getQuestionInfo(id);
     }
 
     @GetMapping("/question/quiz/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<QuestionsResponse>> getQuestionsForQuiz(@PathVariable String id) {
+    public ResponseEntity<List<QuestionsInfoResponse>> getQuestionsForQuiz(@PathVariable String id) {
         return questionsService.findQuestionsByQuiz(id);
     }
 
