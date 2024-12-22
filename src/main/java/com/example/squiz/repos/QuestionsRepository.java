@@ -17,6 +17,9 @@ public interface QuestionsRepository extends JpaRepository<QuestionsEB, Long> {
             "LEFT JOIN FETCH q.quiz WHERE q.quiz.id = :quizId")
     List<QuestionsEB> findQuestionsByQuiz(@Param("quizId") Long quizId);
 
-    @Query("SELECT q FROM QuestionsEB q LEFT JOIN FETCH q.choices WHERE q.id = :questionId")
+    @Query("SELECT q FROM QuestionsEB q " +
+            "LEFT JOIN FETCH q.choices " +
+            "WHERE q.id = :questionId " +
+            "ORDER BY q.id")
     Optional<QuestionsEB> findByQuestionId(@Param("questionId") Long questionId);
 }

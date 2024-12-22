@@ -4,6 +4,7 @@ import com.example.squiz.entities.QuestionsEB;
 import com.example.squiz.entities.QuizEB;
 
 public class QuestionsRequest {
+    private Long questionId = 0L;
     private Integer quizId;
     private String questionNumber;
     private String question;
@@ -22,6 +23,14 @@ public class QuestionsRequest {
         newQuestion.setAllocatedTime(allocatedTime);
 
         return newQuestion;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 
     public Integer getQuizId() {

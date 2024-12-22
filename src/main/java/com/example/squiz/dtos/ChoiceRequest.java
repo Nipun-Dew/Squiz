@@ -4,7 +4,7 @@ import com.example.squiz.entities.ChoicesEB;
 import com.example.squiz.entities.QuestionsEB;
 
 public class ChoiceRequest {
-    private Integer questionId;
+    private Long choiceId = 0L;
     private String choiceNumber;
     private String choiceText;
     private String helperText;
@@ -28,12 +28,12 @@ public class ChoiceRequest {
         return newChoice;
     }
 
-    public Integer getQuestionId() {
-        return questionId;
+    public Long getChoiceId() {
+        return choiceId;
     }
 
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
+    public void setChoiceId(Long choiceId) {
+        this.choiceId = choiceId;
     }
 
     public String getChoiceNumber() {
