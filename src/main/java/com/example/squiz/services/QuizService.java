@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +42,15 @@ public class QuizService {
         }
     }
 
+    @Transactional
     public ResponseEntity<Integer> createNewQuiz(QuizRequest quizRequest, String username) {
         try {
             QuizEB savedQuiz = quizRepository.save(quizRequest.createQuizEntity(username));
-            return ResponseEntity.ok(savedQuiz.getId().intValue());
+            String identifier = generateQuizIdentifier(username, savedQuiz.getId().toString());
+            savedQuiz.setIdentifier(identifier);
+            QuizEB updatedQuiz = quizRepository.save(savedQuiz);
+
+            return ResponseEntity.ok(updatedQuiz.getId().intValue());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
@@ -60,5 +68,11 @@ public class QuizService {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
         }
+    }
+
+    private String generateQuizIdentifier(String username, String quizId) {
+        Instant now = Instant.now();
+        long randTimestamp = now.getEpochSecond();
+        return username + "@" + quizId + randTimestamp;
     }
 }

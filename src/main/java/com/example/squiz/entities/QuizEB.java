@@ -22,6 +22,7 @@ public class QuizEB {
     private String creatorId;
     private String title;
     private String description;
+    private String identifier;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private Integer timeDuration;
@@ -74,6 +75,14 @@ public class QuizEB {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public LocalDateTime getCreatedDate() {
