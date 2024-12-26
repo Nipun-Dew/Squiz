@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +22,20 @@ import static java.lang.Long.parseLong;
 public class QuizService {
     private final QuizRepository quizRepository;
 
-    private final QuizInfoResponse quizInfoResponse;
-
     @Autowired
     public QuizService(QuizRepository quizRepository) {
         this.quizRepository = quizRepository;
-        this.quizInfoResponse = new QuizInfoResponse();
     }
 
     public ResponseEntity<QuizInfoResponse> getQuiz(String id) {
         try {
             Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(id));
+            QuizInfoResponse quizInfoResponse = new QuizInfoResponse();
 
             return optionalQuiz.map(quiz -> ResponseEntity.ok(quizInfoResponse.createQuizInfoResponse(quiz)))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizInfoResponse));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(quizInfoResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizInfoResponse());
         }
     }
 
@@ -49,6 +46,42 @@ public class QuizService {
             String identifier = generateQuizIdentifier(username, savedQuiz.getId().toString());
             savedQuiz.setIdentifier(identifier);
             QuizEB updatedQuiz = quizRepository.save(savedQuiz);
+
+            return ResponseEntity.ok(updatedQuiz.getId().intValue());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+        }
+    }
+
+    public ResponseEntity<QuizResponse> findQuizByIdentifier(String identifier) {
+        try {
+            Optional<QuizEB> optionalQuiz = quizRepository.findQuizByIdentifier(identifier);
+            QuizResponse quizResponse = new QuizResponse();
+
+            return optionalQuiz.map(quiz -> ResponseEntity.ok(quizResponse.createQuizResponse(quiz)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizResponse));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizResponse());
+        }
+    }
+
+    public ResponseEntity<Integer> changeQuizState(String quizId, String newState, String username) {
+        try {
+            Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(quizId));
+
+            if (optionalQuiz.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(-1);
+            }
+
+            QuizEB quiz = optionalQuiz.get();
+            if (!quiz.getCreatorId().equals(username)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1);
+            }
+
+            quiz.setState(newState);
+            QuizEB updatedQuiz = quizRepository.save(quiz);
 
             return ResponseEntity.ok(updatedQuiz.getId().intValue());
         } catch (Exception e) {
