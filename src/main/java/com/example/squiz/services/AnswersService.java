@@ -2,11 +2,11 @@ package com.example.squiz.services;
 
 import com.example.squiz.dtos.AnswersRequest;
 import com.example.squiz.dtos.AnswersResponse;
-import com.example.squiz.entities.AnswerSetsEB;
+import com.example.squiz.entities.SessionsEB;
 import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.ChoicesEB;
 import com.example.squiz.entities.QuestionsEB;
-import com.example.squiz.repos.AnswerSetRepository;
+import com.example.squiz.repos.SessionsRepository;
 import com.example.squiz.repos.AnswersRepository;
 import com.example.squiz.repos.ChoiceRepository;
 import com.example.squiz.repos.QuestionsRepository;
@@ -25,7 +25,7 @@ public class AnswersService {
     private final AnswersRepository answersRepository;
     private final QuestionsRepository questionsRepository;
     private final ChoiceRepository choiceRepository;
-    private final AnswerSetRepository answerSetRepository;
+    private final SessionsRepository sessionsRepository;
 
     private final AnswersResponse answerResponse;
 
@@ -33,11 +33,11 @@ public class AnswersService {
     public AnswersService(AnswersRepository answersRepository,
                           QuestionsRepository questionsRepository,
                           ChoiceRepository choiceRepository,
-                          AnswerSetRepository answerSetRepository) {
+                          SessionsRepository sessionsRepository) {
         this.answersRepository = answersRepository;
         this.questionsRepository = questionsRepository;
         this.choiceRepository = choiceRepository;
-        this.answerSetRepository = answerSetRepository;
+        this.sessionsRepository = sessionsRepository;
         this.answerResponse = new AnswersResponse();
     }
 
@@ -56,27 +56,39 @@ public class AnswersService {
     public ResponseEntity<Integer> createNewAnswer(AnswersRequest answerRequest, String username) {
         try {
             AnswersEB savedAnswer;
-            AnswerSetsEB answerSetEntity = answerSetRepository.findById(answerRequest.getAnswerSetId().longValue())
-                    .orElseThrow();
-            String creatorId = answerSetEntity.getCreatorId();
 
-            if (creatorId.equals(username)) {
+            List<AnswersEB> answers = answersRepository.getAnswersForSession(answerRequest.getSessionId());
+            boolean isAnswerExist = answers.stream().anyMatch(answer ->
+                    answer.getQuestions().getId().equals((long) answerRequest.getQuestionId()));
+
+            if (isAnswerExist) {
+                // TODO handle error that already answered the question in the session
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+            }
+
+            SessionsEB sessionEntity = sessionsRepository.findById(answerRequest.getSessionId().longValue())
+                    .orElseThrow();
+            String userId = sessionEntity.getUserId();
+
+            if (userId.equals(username)) {
                 QuestionsEB questionEntity = questionsRepository.findById(answerRequest.getQuestionId().longValue())
                         .orElseThrow();
 
-                ChoicesEB choiceEntity = choiceRepository.findById(answerRequest.getChoiceId().longValue())
+                ChoicesEB userGivenChoice = choiceRepository.findById(answerRequest.getChoiceId().longValue())
                         .orElseThrow();
 
                 List<ChoicesEB> choices = choiceRepository.getChoicesForQuestion(questionEntity.getId());
 
-                String correctAnswer = Objects.requireNonNull(choices.stream().filter(ChoicesEB::getCorrectAnswer)
-                                .findAny().orElse(null)).getChoiceText();
+                ChoicesEB correctChoiceForQuestion = Objects.requireNonNull(choices.stream().filter(ChoicesEB::getCorrectAnswer)
+                                .findAny().orElse(null));
+
+                boolean isCorrectChoice = userGivenChoice.getId().equals(correctChoiceForQuestion.getId());
 
                 savedAnswer = answersRepository.save(answerRequest.createAnswerEntity(questionEntity,
-                        choiceEntity,
-                        answerSetEntity,
-                        choiceEntity.getCorrectAnswer(),
-                        correctAnswer));
+                        userGivenChoice,
+                        sessionEntity,
+                        isCorrectChoice,
+                        correctChoiceForQuestion.getChoiceText()));
 
             } else {
                 throw new Exception("User is not the creator of the relevant Answer set");
@@ -89,9 +101,9 @@ public class AnswersService {
         }
     }
 
-    public ResponseEntity<List<AnswersResponse>> getAnswersForAnswerSet(String answerSetId) {
+    public ResponseEntity<List<AnswersResponse>> getAnswersForSessionId(String sessionId) {
         try {
-            List<AnswersEB> results = answersRepository.getAnswersForAnswerSet(Long.parseLong(answerSetId));
+            List<AnswersEB> results = answersRepository.getAnswersForSession(Long.parseLong(sessionId));
             List<AnswersResponse> answersResponses = results.stream()
                     .map(result -> new AnswersResponse().createAnswerResponse(result))
                     .toList();

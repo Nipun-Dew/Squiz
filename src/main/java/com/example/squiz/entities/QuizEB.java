@@ -17,7 +17,7 @@ public class QuizEB {
     private Set<QuestionsEB> questions;
 
     @OneToMany(mappedBy = "quiz")
-    private Set<AnswerSetsEB> answerSets;
+    private Set<SessionsEB> sessions;
 
     private String creatorId;
     private String title;
@@ -45,12 +45,12 @@ public class QuizEB {
         this.questions = questions;
     }
 
-    public Set<AnswerSetsEB> getAnswerSets() {
-        return answerSets;
+    public Set<SessionsEB> getSessions() {
+        return sessions;
     }
 
-    public void setAnswerSets(Set<AnswerSetsEB> answerSets) {
-        this.answerSets = answerSets;
+    public void setSessions(Set<SessionsEB> sessions) {
+        this.sessions = sessions;
     }
 
     public String getCreatorId() {

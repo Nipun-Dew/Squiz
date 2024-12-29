@@ -1,6 +1,6 @@
 package com.example.squiz.controllers;
 
-import com.example.squiz.services.AnswerSetService;
+import com.example.squiz.services.SessionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "${api.prefix}")
 public class PointsController {
-    private final AnswerSetService answerSetService;
+    private final SessionsService sessionsService;
 
     @Autowired
-    public PointsController(AnswerSetService answerSetService) {
-        this.answerSetService = answerSetService;
+    public PointsController(SessionsService sessionsService) {
+        this.sessionsService = sessionsService;
     }
 
-    @GetMapping("/points/submission/{id}")
+    @GetMapping("/points/session/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Integer> getPointsBySubmissionId(@PathVariable String id) {
-        return answerSetService.getPointsForAnswerSet(id);
+    public ResponseEntity<Integer> getPointsBySessionId(@PathVariable String id) {
+        return sessionsService.getPointsForSession(id);
     }
 }

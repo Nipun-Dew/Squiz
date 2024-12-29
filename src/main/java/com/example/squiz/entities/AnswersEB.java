@@ -1,19 +1,11 @@
 package com.example.squiz.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "t_answers")
+@Table(name = "t_answers", uniqueConstraints = @UniqueConstraint(columnNames = {"session_id", "question_id"}))
 public class AnswersEB {
     @Id
     @SequenceGenerator(name = "answers_sequence", sequenceName = "answers_sequence", allocationSize = 1)
@@ -29,8 +21,8 @@ public class AnswersEB {
     private ChoicesEB choices;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "answerset_id", referencedColumnName = "id")
-    private AnswerSetsEB answerSets;
+    @JoinColumn(name = "session_id", referencedColumnName = "id")
+    private SessionsEB sessions;
 
     private LocalDateTime submitTime;
 
@@ -46,12 +38,12 @@ public class AnswersEB {
         this.id = id;
     }
 
-    public AnswerSetsEB getAnswerSet() {
-        return answerSets;
+    public SessionsEB getSession() {
+        return sessions;
     }
 
-    public void setAnswerSet(AnswerSetsEB answerSet) {
-        this.answerSets = answerSet;
+    public void setSession(SessionsEB session) {
+        this.sessions = session;
     }
 
     public QuestionsEB getQuestions() {

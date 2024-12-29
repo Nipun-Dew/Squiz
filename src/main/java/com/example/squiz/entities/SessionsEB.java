@@ -15,22 +15,25 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_answersets")
-public class AnswerSetsEB {
+@Table(name = "t_sessions")
+public class SessionsEB {
     @Id
-    @SequenceGenerator(name = "answersets_sequence", sequenceName = "answersets_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answersets_sequence")
+    @SequenceGenerator(name = "sessions_sequence", sequenceName = "sessions_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sessions_sequence")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @OneToMany(mappedBy = "answerSets")
+    @OneToMany(mappedBy = "sessions")
     private Set<AnswersEB> answers;
 
-    private String creatorId;
+    private String userId;
+    private Boolean isCompleted;
     private LocalDateTime startTime;
+    private LocalDateTime submitTime;
+    private LocalDateTime endTime;
     private Integer duration;
 
     public Long getId() {
@@ -57,12 +60,12 @@ public class AnswerSetsEB {
         this.answers = answers;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setUserId(String creatorId) {
+        this.userId = creatorId;
     }
 
     public LocalDateTime getStartTime() {
@@ -71,6 +74,30 @@ public class AnswerSetsEB {
 
     public void setStartTime(LocalDateTime submitTime) {
         this.startTime = submitTime;
+    }
+
+    public Boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
+    }
+
+    public LocalDateTime getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(LocalDateTime submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Integer getDuration() {

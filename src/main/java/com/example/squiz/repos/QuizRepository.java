@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface QuizRepository extends JpaRepository<QuizEB, Long> {
     @Query("SELECT q FROM QuizEB q " +
             "LEFT JOIN FETCH q.questions " +
-            "LEFT JOIN FETCH q.answerSets WHERE q.creatorId = :creatorId")
+            "LEFT JOIN FETCH q.sessions WHERE q.creatorId = :creatorId")
     List<QuizEB> findQuizForCreator(@Param("creatorId") String creatorId);
 
     @Query("SELECT q FROM QuizEB q LEFT JOIN FETCH q.questions WHERE q.id = :quizId")

@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface AnswersRepository extends JpaRepository<AnswersEB, Long> {
     @Query("SELECT a FROM AnswersEB a " +
-            "LEFT JOIN FETCH a.answerSets " +
+            "LEFT JOIN FETCH a.sessions " +
             "LEFT JOIN FETCH a.questions " +
-            "LEFT JOIN FETCH a.choices WHERE a.answerSets.id = :answerSetId")
-    List<AnswersEB> getAnswersForAnswerSet(@Param("answerSetId") long answerSetId);
+            "LEFT JOIN FETCH a.choices WHERE a.sessions.id = :sessionId")
+    List<AnswersEB> getAnswersForSession(@Param("sessionId") long sessionId);
 }

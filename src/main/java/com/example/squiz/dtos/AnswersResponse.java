@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class AnswersResponse {
     private Integer questionId;
     private Integer choiceId;
-    private Integer answerSetId;
+    private Integer sessionId;
     private LocalDateTime submitTime;
     private Boolean isCorrectAnswer;
     private String correctAnswer;
@@ -15,7 +15,7 @@ public class AnswersResponse {
     public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
         this.setQuestionId(answerEntity.getQuestions().getId().intValue());
         this.setChoiceId(answerEntity.getChoices().getId().intValue());
-        this.setAnswerSetId(answerEntity.getAnswerSet().getId().intValue());
+        this.setSessionId(answerEntity.getSession().getId().intValue());
         this.setSubmitTime(answerEntity.getSubmitTime());
         this.setCorrectAnswer(answerEntity.getCorrectAnswer());
         this.setIsCorrectAnswer(answerEntity.getIsCorrectAnswer());
@@ -39,12 +39,12 @@ public class AnswersResponse {
         this.choiceId = choiceId;
     }
 
-    public Integer getAnswerSetId() {
-        return answerSetId;
+    public Integer getSessionId() {
+        return sessionId;
     }
 
-    public void setAnswerSetId(Integer answerSetId) {
-        this.answerSetId = answerSetId;
+    public void setSessionId(Integer sessionId) {
+        this.sessionId = sessionId;
     }
 
     public LocalDateTime getSubmitTime() {

@@ -1,6 +1,6 @@
 package com.example.squiz.dtos;
 
-import com.example.squiz.entities.AnswerSetsEB;
+import com.example.squiz.entities.SessionsEB;
 import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.ChoicesEB;
 import com.example.squiz.entities.QuestionsEB;
@@ -10,20 +10,20 @@ import java.time.LocalDateTime;
 public class AnswersRequest {
     private Integer questionId;
     private Integer choiceId;
-    private Integer answerSetId;
+    private Integer sessionId;
 
     public AnswersRequest() {
     }
 
     public AnswersEB createAnswerEntity(QuestionsEB questionEntity,
                                         ChoicesEB choiceEntity,
-                                        AnswerSetsEB answerSetEntity,
+                                        SessionsEB sessionEntity,
                                         Boolean isCorrectAnswer,
                                         String correctAnswer) {
         AnswersEB newAnswer = new AnswersEB();
         newAnswer.setQuestions(questionEntity);
         newAnswer.setChoices(choiceEntity);
-        newAnswer.setAnswerSet(answerSetEntity);
+        newAnswer.setSession(sessionEntity);
         newAnswer.setIsCorrectAnswer(isCorrectAnswer);
         newAnswer.setCorrectAnswer(correctAnswer);
         newAnswer.setSubmitTime(LocalDateTime.now());
@@ -47,11 +47,11 @@ public class AnswersRequest {
         this.choiceId = choiceId;
     }
 
-    public Integer getAnswerSetId() {
-        return answerSetId;
+    public Integer getSessionId() {
+        return sessionId;
     }
 
-    public void setAnswerSetId(Integer answerSetId) {
-        this.answerSetId = answerSetId;
+    public void setSessionId(Integer sessionId) {
+        this.sessionId = sessionId;
     }
 }
