@@ -3,6 +3,7 @@ package com.example.squiz.services;
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.dtos.info.QuizInfoResponse;
+import com.example.squiz.dtos.info.QuizQuestionInfoResponse;
 import com.example.squiz.entities.QuizEB;
 import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,19 @@ public class QuizService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizResponse());
+        }
+    }
+
+    public ResponseEntity<QuizQuestionInfoResponse> findQuestionsByQuiz(String quizId) {
+        try {
+            Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(quizId));
+            QuizQuestionInfoResponse quizResponse = new QuizQuestionInfoResponse();
+
+            return optionalQuiz.map(quiz -> ResponseEntity.ok(quizResponse.createQuizResponse(quiz)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizResponse));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizQuestionInfoResponse());
         }
     }
 

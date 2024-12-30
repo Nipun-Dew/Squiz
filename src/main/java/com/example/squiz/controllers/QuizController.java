@@ -3,6 +3,7 @@ package com.example.squiz.controllers;
 import com.example.squiz.dtos.QuizRequest;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.dtos.info.QuizInfoResponse;
+import com.example.squiz.dtos.info.QuizQuestionInfoResponse;
 import com.example.squiz.services.QuizService;
 import com.example.squiz.utils.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class QuizController implements AuthenticationUtil {
     public ResponseEntity<List<QuizResponse>> getQuizzesForCreator(Authentication authentication) {
         String username = getUsername(authentication);
         return service.findQuizzesForUser(username);
+    }
+
+    @GetMapping("/quiz/questions/{quizId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<QuizQuestionInfoResponse> getQuestionsMetadata(@PathVariable String quizId) {
+        return service.findQuestionsByQuiz(quizId);
     }
 
     @PostMapping("/quiz/play")
