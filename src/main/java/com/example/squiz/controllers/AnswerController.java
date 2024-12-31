@@ -46,6 +46,14 @@ public class AnswerController implements UserDetailsUtil {
         return sessionsService.getSessionsForQuiz(quizId);
     }
 
+    @GetMapping("/session/user/quiz/{quizId}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<SessionResponse> getSessionForQuiz(@PathVariable String quizId,
+                                                                    Authentication authentication) {
+        String username = extractUser(authentication);
+        return sessionsService.getSessionForQuizByUserId(quizId, username);
+    }
+
     @GetMapping("/session/answer/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<AnswersResponse> getAnswerById(@PathVariable String id) {

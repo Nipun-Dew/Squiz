@@ -23,15 +23,12 @@ public class SessionsService {
     private final QuizRepository quizRepository;
     private final AnswersRepository answersRepository;
 
-    private final SessionResponse sessionResponse;
-
     @Autowired
     public SessionsService(SessionsRepository sessionsRepository,
                            QuizRepository quizRepository, AnswersRepository answersRepository) {
         this.sessionsRepository = sessionsRepository;
         this.quizRepository = quizRepository;
         this.answersRepository = answersRepository;
-        this.sessionResponse = new SessionResponse();
     }
 
     public ResponseEntity<SessionResponse> getSession(String id) {
@@ -39,10 +36,10 @@ public class SessionsService {
             Optional<SessionsEB> optionalSession = sessionsRepository.findById(Long.parseLong(id));
 
             return optionalSession
-                    .map(session -> ResponseEntity.ok(sessionResponse.createSessionResponse(session)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(sessionResponse));
+                    .map(session -> ResponseEntity.ok(new SessionResponse().createSessionResponse(session)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new SessionResponse()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sessionResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SessionResponse());
         }
     }
 
@@ -69,6 +66,18 @@ public class SessionsService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+        }
+    }
+
+    public ResponseEntity<SessionResponse> getSessionForQuizByUserId(String quizId, String username) {
+        try {
+            Optional<SessionsEB> optionalSession = sessionsRepository.getSessionsForQuizByUserId(Long.parseLong(quizId), username);
+            return optionalSession.map(session ->
+                            ResponseEntity.ok(new SessionResponse().createSessionResponse(session)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new SessionResponse()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SessionResponse());
         }
     }
 

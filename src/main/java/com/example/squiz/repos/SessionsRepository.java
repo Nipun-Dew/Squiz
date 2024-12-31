@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SessionsRepository extends JpaRepository<SessionsEB, Long> {
@@ -14,4 +15,10 @@ public interface SessionsRepository extends JpaRepository<SessionsEB, Long> {
             "LEFT JOIN FETCH s.quiz " +
             "LEFT JOIN FETCH s.answers WHERE s.quiz.id = :quizId")
     List<SessionsEB> getSessionsForQuiz(@Param("quizId") long quizId);
+
+    @Query("SELECT s FROM SessionsEB s " +
+            "LEFT JOIN FETCH s.quiz " +
+            "LEFT JOIN FETCH s.answers " +
+            "WHERE s.quiz.id = :quizId AND s.userId = :userId")
+    Optional<SessionsEB> getSessionsForQuizByUserId(@Param("quizId") long quizId, @Param("userId") String userId);
 }
