@@ -4,6 +4,8 @@ import com.example.squiz.dtos.ChoiceResponse;
 import com.example.squiz.dtos.QuestionsResponse;
 import com.example.squiz.entities.QuestionsEB;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class QuestionsInfoResponse {
@@ -14,9 +16,13 @@ public class QuestionsInfoResponse {
     }
 
     public QuestionsInfoResponse createQuestionInfoResponse(QuestionsEB questionEntity) {
-        this.setQuestion(new QuestionsResponse().createQuestionsResponse(questionEntity));
-        this.setAnswers(questionEntity.getChoices().stream().map(choice ->
+        List<ChoiceResponse> answers = new ArrayList<>(questionEntity.getChoices().stream().map(choice ->
                 new ChoiceResponse().createChoiceResponse(choice)).toList());
+
+        answers.sort(Comparator.comparingLong(ChoiceResponse::getId));
+
+        this.setQuestion(new QuestionsResponse().createQuestionsResponse(questionEntity));
+        this.setAnswers(answers);
 
         return this;
     }
