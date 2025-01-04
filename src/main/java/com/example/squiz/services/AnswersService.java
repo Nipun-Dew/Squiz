@@ -61,11 +61,6 @@ public class AnswersService {
             boolean isAnswerExist = answers.stream().anyMatch(answer ->
                     answer.getQuestions().getId().equals((long) answerRequest.getQuestionId()));
 
-            if (isAnswerExist) {
-                // TODO handle error that already answered the question in the session
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
-            }
-
             SessionsEB sessionEntity = sessionsRepository.findById(answerRequest.getSessionId().longValue())
                     .orElseThrow();
             String userId = sessionEntity.getUserId();

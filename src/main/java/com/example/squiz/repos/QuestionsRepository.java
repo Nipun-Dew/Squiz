@@ -22,4 +22,11 @@ public interface QuestionsRepository extends JpaRepository<QuestionsEB, Long> {
             "WHERE q.id = :questionId " +
             "ORDER BY q.id")
     Optional<QuestionsEB> findByQuestionId(@Param("questionId") Long questionId);
+
+    @Query(value = "SELECT q.* FROM t_questions q " +
+            "LEFT JOIN t_choices c ON q.id = c.question_id " +
+            "LEFT JOIN t_answers a ON q.id = a.question_id AND a.session_id = :sessionId " +
+            "WHERE q.id = :questionId", nativeQuery = true)
+    Optional<QuestionsEB> findQuestionsWithAnswers(@Param("questionId") Long questionId,
+                                                   @Param("sessionId") Long sessionId);
 }

@@ -8,6 +8,7 @@ import com.example.squiz.entities.QuestionsEB;
 import java.time.LocalDateTime;
 
 public class AnswersRequest {
+    private Long id = 0L;
     private Integer questionId;
     private Integer choiceId;
     private Integer sessionId;
@@ -21,6 +22,7 @@ public class AnswersRequest {
                                         Boolean isCorrectAnswer,
                                         String correctAnswer) {
         AnswersEB newAnswer = new AnswersEB();
+        newAnswer.setId(id);
         newAnswer.setQuestions(questionEntity);
         newAnswer.setChoices(choiceEntity);
         newAnswer.setSession(sessionEntity);
@@ -29,6 +31,14 @@ public class AnswersRequest {
         newAnswer.setSubmitTime(LocalDateTime.now());
 
         return newAnswer;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getQuestionId() {

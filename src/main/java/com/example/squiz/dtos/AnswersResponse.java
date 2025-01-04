@@ -5,6 +5,7 @@ import com.example.squiz.entities.AnswersEB;
 import java.time.LocalDateTime;
 
 public class AnswersResponse {
+    private Long id;
     private Integer questionId;
     private Integer choiceId;
     private Integer sessionId;
@@ -13,6 +14,7 @@ public class AnswersResponse {
     private String correctAnswer;
 
     public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
+        this.setId(answerEntity.getId());
         this.setQuestionId(answerEntity.getQuestions().getId().intValue());
         this.setChoiceId(answerEntity.getChoices().getId().intValue());
         this.setSessionId(answerEntity.getSession().getId().intValue());
@@ -21,6 +23,14 @@ public class AnswersResponse {
         this.setIsCorrectAnswer(answerEntity.getIsCorrectAnswer());
 
         return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getQuestionId() {
@@ -61,6 +71,10 @@ public class AnswersResponse {
 
     public String getCorrectAnswer() {
         return correctAnswer;
+    }
+
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
     }
 
     public void setCorrectAnswer(String correctAnswer) {

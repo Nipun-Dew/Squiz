@@ -26,8 +26,6 @@ public class QuestionsService {
     private final QuizRepository quizRepository;
     private final ChoiceRepository choiceRepository;
 
-    private final QuestionsInfoResponse questionsInfoResponse;
-
     @Autowired
     public QuestionsService(QuestionsRepository questionsRepository,
                             QuizRepository quizRepository,
@@ -35,17 +33,29 @@ public class QuestionsService {
         this.questionsRepository = questionsRepository;
         this.quizRepository = quizRepository;
         this.choiceRepository = choiceRepository;
-        this.questionsInfoResponse = new QuestionsInfoResponse();
     }
 
     public ResponseEntity<QuestionsInfoResponse> getQuestionInfo(String id) {
         try {
             Optional<QuestionsEB> optionalQuestionInfo = questionsRepository.findByQuestionId(parseLong(id));
 
-            return optionalQuestionInfo.map(question -> ResponseEntity.ok(questionsInfoResponse.createQuestionInfoResponse(question)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(questionsInfoResponse));
+            return optionalQuestionInfo.map(question -> ResponseEntity.ok(new QuestionsInfoResponse().createQuestionInfoResponse(question)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new QuestionsInfoResponse()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(questionsInfoResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuestionsInfoResponse());
+        }
+    }
+
+    public ResponseEntity<QuestionsInfoResponse> getQuestionInfoWithAnswer(String questionId,
+                                                                           String sessionId) {
+        try {
+            Optional<QuestionsEB> optionalQuestionInfo = questionsRepository
+                    .findQuestionsWithAnswers(parseLong(questionId), parseLong(sessionId));
+
+            return optionalQuestionInfo.map(question -> ResponseEntity.ok(new QuestionsInfoResponse().createQuestionInfoResponse(question)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new QuestionsInfoResponse()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuestionsInfoResponse());
         }
     }
 

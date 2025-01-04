@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public class QuizResponse {
     private Integer id;
     private String creatorId;
+    private String quizIdentifier;
     private String title;
     private String description;
     private LocalDateTime createdDate;
@@ -21,6 +22,7 @@ public class QuizResponse {
     public QuizResponse createQuizResponse(QuizEB quizEntity) {
         this.setId(quizEntity.getId().intValue());
         this.setCreatorId(quizEntity.getCreatorId());
+        this.setQuizIdentifier(quizEntity.getIdentifier());
         this.setTitle(quizEntity.getTitle());
         this.setDescription(quizEntity.getDescription());
         this.setCreatedDate(quizEntity.getCreatedDate());
@@ -46,6 +48,14 @@ public class QuizResponse {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getQuizIdentifier() {
+        return quizIdentifier;
+    }
+
+    public void setQuizIdentifier(String quizIdentifier) {
+        this.quizIdentifier = quizIdentifier;
     }
 
     public String getTitle() {

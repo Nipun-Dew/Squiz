@@ -29,6 +29,13 @@ public class QuestionsController implements UserDetailsUtil {
         return questionsService.getQuestionInfo(id);
     }
 
+    @GetMapping("/question")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<QuestionsInfoResponse> getQuestionInfoWithAnswer(@RequestParam(defaultValue = "0") String questionId,
+                                                                           @RequestParam(defaultValue = "0") String sessionId) {
+        return questionsService.getQuestionInfoWithAnswer(questionId, sessionId);
+    }
+
     @GetMapping("/question/quiz/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<QuestionsInfoResponse>> getQuestionsForQuiz(@PathVariable String id) {
