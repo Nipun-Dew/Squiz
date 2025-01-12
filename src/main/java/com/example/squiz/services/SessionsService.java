@@ -92,4 +92,26 @@ public class SessionsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
         }
     }
+
+    public ResponseEntity<Integer> completeSession(String sessionId, String userName) {
+        try {
+            Optional<SessionsEB> optionalSession = sessionsRepository.findById(Long.parseLong(sessionId));
+
+            if (optionalSession.isEmpty()) {
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(-1);
+            }
+
+            SessionsEB session = optionalSession.get();
+            if (!session.getUserId().equals(userName)) {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1);
+            }
+
+            session.setCompleted(true);
+            SessionsEB savedSession = sessionsRepository.save(session);
+
+            return ResponseEntity.ok(savedSession.getId().intValue());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

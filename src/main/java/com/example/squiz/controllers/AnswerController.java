@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "${api.prefix}")
@@ -49,7 +50,7 @@ public class AnswerController implements UserDetailsUtil {
     @GetMapping("/session/user/quiz/{quizId}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<SessionResponse> getSessionForQuiz(@PathVariable String quizId,
-                                                                    Authentication authentication) {
+                                                             Authentication authentication) {
         String username = extractUser(authentication);
         return sessionsService.getSessionForQuizByUserId(quizId, username);
     }
@@ -82,8 +83,15 @@ public class AnswerController implements UserDetailsUtil {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> createAnswer(@RequestBody AnswersRequest answerRequest,
                                                 Authentication authentication) {
-
         String username = extractUser(authentication);
         return answerService.createNewAnswer(answerRequest, username);
+    }
+
+    @PostMapping("/session/submit")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Integer> completeSession(@RequestBody Map<String, String> requestBody,
+                                                   Authentication authentication) {
+        String username = extractUser(authentication);
+        return sessionsService.completeSession(requestBody.get("sessionId"), username);
     }
 }
