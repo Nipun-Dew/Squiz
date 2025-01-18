@@ -5,6 +5,7 @@ import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.dtos.info.QuizInfoResponse;
 import com.example.squiz.dtos.info.QuizQuestionInfoResponse;
 import com.example.squiz.entities.QuizEB;
+import com.example.squiz.exceptions.customExceptions.*;
 import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,16 +30,16 @@ public class QuizService {
     }
 
     public ResponseEntity<QuizInfoResponse> getQuiz(String id) {
-        try {
-            Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(id));
-            QuizInfoResponse quizInfoResponse = new QuizInfoResponse();
+        Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(id));
 
-            return optionalQuiz.map(quiz -> ResponseEntity.ok(quizInfoResponse.createQuizInfoResponse(quiz)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizInfoResponse));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizInfoResponse());
+        if (optionalQuiz.isPresent()) {
+            QuizInfoResponse quizInfoResponse = new QuizInfoResponse().createQuizInfoResponse(optionalQuiz.get());
+            return ResponseEntity.ok(quizInfoResponse);  // Return 200 OK with the quiz data
+        } else {
+            throw new QuizNotFoundException("Quiz not found with ID: " + id);
         }
     }
+
 
     @Transactional
     public ResponseEntity<Integer> createNewQuiz(QuizRequest quizRequest, String username) {
@@ -50,48 +51,55 @@ public class QuizService {
 
             return ResponseEntity.ok(updatedQuiz.getId().intValue());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+            throw new BadRequestException("Failed to create quiz: " + e.getMessage());
         }
     }
 
     public ResponseEntity<QuizResponse> findQuizByIdentifier(String identifier) {
         try {
-            Optional<QuizEB> optionalQuiz = quizRepository.findQuizByIdentifier(identifier);
-            QuizResponse quizResponse = new QuizResponse();
+            QuizEB quiz = quizRepository.findQuizByIdentifier(identifier)
+                    .orElseThrow(() -> new BadRequestException("No quiz found for identifier: " + identifier));
 
-            return optionalQuiz.map(quiz -> ResponseEntity.ok(quizResponse.createQuizResponse(quiz)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizResponse));
+            QuizResponse quizResponse = new QuizResponse().createQuizResponse(quiz);
+            return ResponseEntity.ok(quizResponse);
+        } catch (BadRequestException e) {
+            throw e;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizResponse());
+            throw new InternalServerErrorException("An unexpected error occurred while finding the quiz: " + e.getMessage());
         }
     }
+
+
 
     public ResponseEntity<QuizQuestionInfoResponse> findQuestionsByQuiz(String quizId) {
         try {
-            Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(quizId));
-            QuizQuestionInfoResponse quizResponse = new QuizQuestionInfoResponse();
+            QuizEB quiz = quizRepository.findQuizById(parseLong(quizId))
+                    .orElseThrow(() -> new BadRequestException("No quiz found for ID: " + quizId));
 
-            return optionalQuiz.map(quiz -> ResponseEntity.ok(quizResponse.createQuizResponse(quiz)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(quizResponse));
+            QuizQuestionInfoResponse quizResponse = new QuizQuestionInfoResponse().createQuizResponse(quiz);
+            return ResponseEntity.ok(quizResponse);
+
+        } catch (BadRequestException e) {
+            throw new QuizNotFoundException(e.getMessage());
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Invalid quiz ID format: " + quizId);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuizQuestionInfoResponse());
+            throw new InternalServerErrorException("An unexpected error occurred while fetching quiz questions: " + e.getMessage());
         }
     }
+
 
     public ResponseEntity<Integer> changeQuizState(String quizId, String newState, String username) {
         try {
             Optional<QuizEB> optionalQuiz = quizRepository.findQuizById(parseLong(quizId));
 
             if (optionalQuiz.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(-1);
+                throw new NoContentException("Quiz not found for the given ID: " + quizId);
             }
 
             QuizEB quiz = optionalQuiz.get();
             if (!quiz.getCreatorId().equals(username)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1);
+                throw new UnauthorizedException("User is not authorized to change the state of this quiz.");
             }
 
             quiz.setState(newState);
@@ -99,23 +107,30 @@ public class QuizService {
 
             return ResponseEntity.ok(updatedQuiz.getId().intValue());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+            throw new BadRequestException("An error occurred while changing the quiz state: " + e.getMessage());
         }
     }
+
+
 
     public ResponseEntity<List<QuizResponse>> findQuizzesForUser(String username) {
         try {
             List<QuizEB> quizzes = quizRepository.findQuizForCreator(username);
+
+            if (quizzes.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ArrayList<>());
+            }
+
             List<QuizResponse> quizResponses = quizzes.stream()
                     .map(result -> new QuizResponse().createQuizResponse(result))
                     .toList();
+
             return ResponseEntity.ok(quizResponses);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+            throw new BadRequestException("An error occurred while fetching quizzes for the user: " + e.getMessage());
         }
     }
+
 
     private String generateQuizIdentifier(String username, String quizId) {
         Instant now = Instant.now();
