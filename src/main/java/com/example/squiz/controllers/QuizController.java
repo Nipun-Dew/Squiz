@@ -7,6 +7,7 @@ import com.example.squiz.dtos.info.QuizQuestionInfoResponse;
 import com.example.squiz.services.QuizService;
 import com.example.squiz.utils.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,33 +27,33 @@ public class QuizController implements AuthenticationUtil {
         this.service = service;
     }
 
-    @GetMapping("/quiz/{id}")
+    @GetMapping(value = "/quiz/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<QuizInfoResponse> getQuizById(@PathVariable String id) {
         return service.getQuiz(id);
     }
 
-    @GetMapping("/quizzes")
+    @GetMapping(value = "/quizzes", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<QuizResponse>> getQuizzesForCreator(Authentication authentication) {
         String username = getUsername(authentication);
         return service.findQuizzesForUser(username);
     }
 
-    @GetMapping("/quiz/questions/{quizId}")
+    @GetMapping(value = "/quiz/questions/{quizId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<QuizQuestionInfoResponse> getQuestionsMetadata(@PathVariable String quizId) {
         return service.findQuestionsByQuiz(quizId);
     }
 
-    @PostMapping("/quiz/play")
+    @PostMapping(value = "/quiz/play", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<QuizResponse> getQuizForIdentifier(@RequestBody Map<String, String> requestBody) {
         String identifier = requestBody.get("identifier");
         return service.findQuizByIdentifier(identifier);
     }
 
-    @PostMapping("/quiz/publish")
+    @PostMapping(value = "/quiz/publish", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> publishQuiz(@RequestBody Map<String, String> requestBody, Authentication authentication) {
         String username = getUsername(authentication);
