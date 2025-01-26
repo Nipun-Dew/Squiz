@@ -115,7 +115,7 @@ public class QuizService {
 
     public ResponseEntity<List<QuizResponse>> findQuizzesForUser(String username) {
         try {
-            List<QuizEB> quizzes = quizRepository.findQuizForCreator(username);
+            List<QuizEB> quizzes = quizRepository.findQuizByCreatorId(username);
 
             if (quizzes.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ArrayList<>());

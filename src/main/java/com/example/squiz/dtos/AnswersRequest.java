@@ -8,20 +8,22 @@ import com.example.squiz.entities.QuestionsEB;
 import java.time.LocalDateTime;
 
 public class AnswersRequest {
+    // If user not provided an id in answer request, it will create an new answer, else update the answer for the given id
     private Long id = 0L;
-    private Integer questionId;
-    private Integer choiceId;
-    private Integer sessionId;
+    private Long questionId;
+    private Long choiceId;
+    private Long sessionId;
 
     public AnswersRequest() {
     }
 
-    public AnswersEB createAnswerEntity(QuestionsEB questionEntity,
-                                        ChoicesEB choiceEntity,
-                                        SessionsEB sessionEntity,
-                                        Boolean isCorrectAnswer,
-                                        String correctAnswer) {
+    public AnswersEB createOrUpdateAnswer(QuestionsEB questionEntity,
+                                          ChoicesEB choiceEntity,
+                                          SessionsEB sessionEntity,
+                                          Boolean isCorrectAnswer,
+                                          String correctAnswer) {
         AnswersEB newAnswer = new AnswersEB();
+        // If id has a value in answer request, this method will update the existing answer for the given id
         newAnswer.setId(id);
         newAnswer.setQuestions(questionEntity);
         newAnswer.setChoices(choiceEntity);
@@ -41,27 +43,27 @@ public class AnswersRequest {
         this.id = id;
     }
 
-    public Integer getQuestionId() {
+    public Long getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
 
-    public Integer getChoiceId() {
+    public Long getChoiceId() {
         return choiceId;
     }
 
-    public void setChoiceId(Integer choiceId) {
+    public void setChoiceId(Long choiceId) {
         this.choiceId = choiceId;
     }
 
-    public Integer getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(Integer sessionId) {
+    public void setSessionId(Long sessionId) {
         this.sessionId = sessionId;
     }
 }

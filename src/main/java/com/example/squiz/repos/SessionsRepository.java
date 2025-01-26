@@ -13,12 +13,9 @@ import java.util.Optional;
 public interface SessionsRepository extends JpaRepository<SessionsEB, Long> {
     @Query("SELECT s FROM SessionsEB s " +
             "LEFT JOIN FETCH s.quiz " +
-            "LEFT JOIN FETCH s.answers WHERE s.quiz.id = :quizId")
-    List<SessionsEB> getSessionsForQuiz(@Param("quizId") long quizId);
-
-    @Query("SELECT s FROM SessionsEB s " +
-            "LEFT JOIN FETCH s.quiz " +
             "LEFT JOIN FETCH s.answers " +
             "WHERE s.quiz.id = :quizId AND s.userId = :userId")
     Optional<SessionsEB> getSessionsForQuizByUserId(@Param("quizId") long quizId, @Param("userId") String userId);
+
+    List<SessionsEB> findSessionsByQuiz_Id(Long quizId);
 }

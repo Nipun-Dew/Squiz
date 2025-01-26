@@ -11,14 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface QuizRepository extends JpaRepository<QuizEB, Long> {
-    @Query("SELECT q FROM QuizEB q " +
-            "LEFT JOIN FETCH q.questions " +
-            "LEFT JOIN FETCH q.sessions WHERE q.creatorId = :creatorId")
-    List<QuizEB> findQuizForCreator(@Param("creatorId") String creatorId);
+    List<QuizEB> findQuizByCreatorId(String creatorId);
 
-    @Query("SELECT q FROM QuizEB q LEFT JOIN FETCH q.questions WHERE q.id = :quizId")
-    Optional<QuizEB> findQuizById(@Param("quizId") Long quizId);
+    Optional<QuizEB> findQuizById(Long id);
 
-    @Query("SELECT q FROM QuizEB q WHERE q.identifier = :identifier")
-    Optional<QuizEB> findQuizByIdentifier(@Param("identifier") String identifier);
+    Optional<QuizEB> findQuizByIdentifier(String identifier);
 }

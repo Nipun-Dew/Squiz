@@ -10,8 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ChoiceRepository extends JpaRepository<ChoicesEB, Long> {
-    @Query("SELECT c FROM ChoicesEB c " +
-            "LEFT JOIN FETCH c.questions " +
-            "LEFT JOIN FETCH c.answers WHERE c.questions.id = :questionId")
-    List<ChoicesEB> getChoicesForQuestion(@Param("questionId") long questionId);
+    List<ChoicesEB> findChoicesByQuestions_Id(Long questionsId);
 }

@@ -1,10 +1,15 @@
 package com.example.squiz.services;
 
+import com.example.squiz.dtos.AnswersResponse;
 import com.example.squiz.dtos.info.QuestionsInfoRequest;
 import com.example.squiz.dtos.info.QuestionsInfoResponse;
+import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.ChoicesEB;
 import com.example.squiz.entities.QuestionsEB;
 import com.example.squiz.entities.QuizEB;
+import com.example.squiz.exceptions.customExceptions.InternalServerErrorException;
+import com.example.squiz.exceptions.customExceptions.NoContentException;
+import com.example.squiz.repos.AnswersRepository;
 import com.example.squiz.repos.ChoiceRepository;
 import com.example.squiz.repos.QuestionsRepository;
 import com.example.squiz.repos.QuizRepository;
@@ -25,19 +30,21 @@ public class QuestionsService {
     private final QuestionsRepository questionsRepository;
     private final QuizRepository quizRepository;
     private final ChoiceRepository choiceRepository;
+    private final AnswersRepository answersRepository;
 
     @Autowired
     public QuestionsService(QuestionsRepository questionsRepository,
                             QuizRepository quizRepository,
-                            ChoiceRepository choiceRepository) {
+                            ChoiceRepository choiceRepository, AnswersRepository answersRepository) {
         this.questionsRepository = questionsRepository;
         this.quizRepository = quizRepository;
         this.choiceRepository = choiceRepository;
+        this.answersRepository = answersRepository;
     }
 
     public ResponseEntity<QuestionsInfoResponse> getQuestionInfo(String id) {
         try {
-            Optional<QuestionsEB> optionalQuestionInfo = questionsRepository.findByQuestionId(parseLong(id));
+            Optional<QuestionsEB> optionalQuestionInfo = questionsRepository.findById(parseLong(id));
 
             return optionalQuestionInfo.map(question -> ResponseEntity.ok(new QuestionsInfoResponse().createQuestionInfoResponse(question)))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new QuestionsInfoResponse()));
@@ -49,13 +56,31 @@ public class QuestionsService {
     public ResponseEntity<QuestionsInfoResponse> getQuestionInfoWithAnswer(String questionId,
                                                                            String sessionId) {
         try {
-            Optional<QuestionsEB> optionalQuestionInfo = questionsRepository
-                    .findQuestionsWithAnswers(parseLong(questionId), parseLong(sessionId));
+            Optional<QuestionsEB> optionalQuestion = questionsRepository.findById(parseLong(questionId));
 
-            return optionalQuestionInfo.map(question -> ResponseEntity.ok(new QuestionsInfoResponse().createQuestionInfoResponse(question)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new QuestionsInfoResponse()));
+            Optional<AnswersEB> optionalAnswer = answersRepository.findByQuestionIdAndSessionId(parseLong(questionId),
+                    parseLong(sessionId));
+
+            if (optionalQuestion.isEmpty()) {
+                throw new NoContentException("No question found with id " + questionId);
+            }
+
+            QuestionsInfoResponse questionsInfoResponse = new QuestionsInfoResponse()
+                    .createQuestionInfoResponse(optionalQuestion.get());
+
+            if (optionalAnswer.isPresent()) {
+                List<AnswersResponse> answersResponse = new ArrayList<>();
+                answersResponse.add(new AnswersResponse().createAnswerResponse(optionalAnswer.get()));
+                questionsInfoResponse.setAnswers(answersResponse);
+            } else {
+                questionsInfoResponse.setAnswers(new ArrayList<>());
+            }
+
+            return ResponseEntity.ok(questionsInfoResponse);
+        } catch (NoContentException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new QuestionsInfoResponse());
+            throw new InternalServerErrorException("An unexpected error occurred while finding the quiz: " + e.getMessage());
         }
     }
 
@@ -113,7 +138,7 @@ public class QuestionsService {
 
     public ResponseEntity<List<QuestionsInfoResponse>> findQuestionsByQuiz(String quizId) {
         try {
-            List<QuestionsEB> results = questionsRepository.findQuestionsByQuiz(Long.parseLong(quizId));
+            List<QuestionsEB> results = questionsRepository.findQuestionsByQuiz_Id(parseLong(quizId));
             List<QuestionsInfoResponse> questionResponses = results.stream()
                     .map(result -> new QuestionsInfoResponse().createQuestionInfoResponse(result))
                     .toList();

@@ -26,7 +26,7 @@ public class SessionsEB {
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @OneToMany(mappedBy = "sessions")
+    @OneToMany(mappedBy = "session")
     private Set<AnswersEB> answers;
 
     private String userId;

@@ -22,7 +22,7 @@ public class AnswersEB {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "session_id", referencedColumnName = "id")
-    private SessionsEB sessions;
+    private SessionsEB session;
 
     private LocalDateTime submitTime;
 
@@ -39,11 +39,11 @@ public class AnswersEB {
     }
 
     public SessionsEB getSession() {
-        return sessions;
+        return session;
     }
 
     public void setSession(SessionsEB session) {
-        this.sessions = session;
+        this.session = session;
     }
 
     public QuestionsEB getQuestions() {

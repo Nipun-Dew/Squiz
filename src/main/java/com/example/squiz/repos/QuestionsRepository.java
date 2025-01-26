@@ -11,22 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionsRepository extends JpaRepository<QuestionsEB, Long> {
-    @Query("SELECT q FROM QuestionsEB q " +
-            "LEFT JOIN FETCH q.choices " +
-            "LEFT JOIN FETCH q.answers " +
-            "LEFT JOIN FETCH q.quiz WHERE q.quiz.id = :quizId")
-    List<QuestionsEB> findQuestionsByQuiz(@Param("quizId") Long quizId);
-
-    @Query("SELECT q FROM QuestionsEB q " +
-            "LEFT JOIN FETCH q.choices " +
-            "WHERE q.id = :questionId " +
-            "ORDER BY q.id")
-    Optional<QuestionsEB> findByQuestionId(@Param("questionId") Long questionId);
-
-    @Query(value = "SELECT q.* FROM t_questions q " +
-            "LEFT JOIN t_choices c ON q.id = c.question_id " +
-            "LEFT JOIN t_answers a ON q.id = a.question_id AND a.session_id = :sessionId " +
-            "WHERE q.id = :questionId", nativeQuery = true)
-    Optional<QuestionsEB> findQuestionsWithAnswers(@Param("questionId") Long questionId,
-                                                   @Param("sessionId") Long sessionId);
+    List<QuestionsEB> findQuestionsByQuiz_Id(Long quizId);
 }

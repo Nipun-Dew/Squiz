@@ -58,7 +58,7 @@ public class SessionsService {
 
     public ResponseEntity<List<SessionResponse>> getSessionsForQuiz(String quizId) {
         try {
-            List<SessionsEB> results = sessionsRepository.getSessionsForQuiz(Long.parseLong(quizId));
+            List<SessionsEB> results = sessionsRepository.findSessionsByQuiz_Id(Long.parseLong(quizId));
             List<SessionResponse> sessionsResponse = results.stream()
                     .map(result -> new SessionResponse().createSessionResponse(result))
                     .toList();
@@ -83,7 +83,7 @@ public class SessionsService {
 
     public ResponseEntity<Integer> getPointsForSession(String sessionId) {
         try {
-            List<AnswersEB> results = answersRepository.getAnswersForSession(Long.parseLong(sessionId));
+            List<AnswersEB> results = answersRepository.findAnswersBySession_Id(Long.parseLong(sessionId));
             Integer points = results.stream().filter(AnswersEB::getIsCorrectAnswer).toList().size();
 
             return ResponseEntity.ok(points);
@@ -98,12 +98,12 @@ public class SessionsService {
             Optional<SessionsEB> optionalSession = sessionsRepository.findById(Long.parseLong(sessionId));
 
             if (optionalSession.isEmpty()) {
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(-1);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(-1);
             }
 
             SessionsEB session = optionalSession.get();
             if (!session.getUserId().equals(userName)) {
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1);
             }
 
             session.setCompleted(true);

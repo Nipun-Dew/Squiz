@@ -6,6 +6,9 @@ import com.example.squiz.entities.SessionsEB;
 import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.ChoicesEB;
 import com.example.squiz.entities.QuestionsEB;
+import com.example.squiz.exceptions.customExceptions.InternalServerErrorException;
+import com.example.squiz.exceptions.customExceptions.NoContentException;
+import com.example.squiz.exceptions.customExceptions.UnauthorizedException;
 import com.example.squiz.repos.SessionsRepository;
 import com.example.squiz.repos.AnswersRepository;
 import com.example.squiz.repos.ChoiceRepository;
@@ -27,8 +30,6 @@ public class AnswersService {
     private final ChoiceRepository choiceRepository;
     private final SessionsRepository sessionsRepository;
 
-    private final AnswersResponse answerResponse;
-
     @Autowired
     public AnswersService(AnswersRepository answersRepository,
                           QuestionsRepository questionsRepository,
@@ -38,7 +39,6 @@ public class AnswersService {
         this.questionsRepository = questionsRepository;
         this.choiceRepository = choiceRepository;
         this.sessionsRepository = sessionsRepository;
-        this.answerResponse = new AnswersResponse();
     }
 
     public ResponseEntity<AnswersResponse> getAnswer(String id) {
@@ -46,59 +46,65 @@ public class AnswersService {
             Optional<AnswersEB> optionalAnswer = answersRepository.findById(Long.parseLong(id));
 
             return optionalAnswer
-                    .map(answer -> ResponseEntity.ok(answerResponse.createAnswerResponse(answer)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(answerResponse));
+                    .map(answer -> ResponseEntity.ok(new AnswersResponse().createAnswerResponse(answer)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new AnswersResponse()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(answerResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AnswersResponse());
         }
     }
 
     public ResponseEntity<Integer> createNewAnswer(AnswersRequest answerRequest, String username) {
         try {
             AnswersEB savedAnswer;
+            Optional<AnswersEB> optionalAnswer = answersRepository.findByQuestionIdAndSessionId(answerRequest.getQuestionId(),
+                    answerRequest.getSessionId());
 
-            List<AnswersEB> answers = answersRepository.getAnswersForSession(answerRequest.getSessionId());
-            boolean isAnswerExist = answers.stream().anyMatch(answer ->
-                    answer.getQuestions().getId().equals((long) answerRequest.getQuestionId()));
+            // If an answer already provided for the question within the session, should update the answer instead of creating
+            optionalAnswer.ifPresent(answersEB -> answerRequest.setId(answersEB.getId()));
 
-            SessionsEB sessionEntity = sessionsRepository.findById(answerRequest.getSessionId().longValue())
-                    .orElseThrow();
+            SessionsEB sessionEntity = sessionsRepository.findById(answerRequest.getSessionId())
+                    .orElseThrow(() -> new NoContentException("Can not find a session to create an Answer"));
+
             String userId = sessionEntity.getUserId();
 
+            // check whether the session user and answering user both same
             if (userId.equals(username)) {
-                QuestionsEB questionEntity = questionsRepository.findById(answerRequest.getQuestionId().longValue())
+                QuestionsEB questionEntity = questionsRepository.findById(answerRequest.getQuestionId())
                         .orElseThrow();
 
-                ChoicesEB userGivenChoice = choiceRepository.findById(answerRequest.getChoiceId().longValue())
+                ChoicesEB userGivenChoice = choiceRepository.findById(answerRequest.getChoiceId())
                         .orElseThrow();
 
-                List<ChoicesEB> choices = choiceRepository.getChoicesForQuestion(questionEntity.getId());
+                List<ChoicesEB> choices = questionEntity.getChoices().stream().toList();
 
                 ChoicesEB correctChoiceForQuestion = Objects.requireNonNull(choices.stream().filter(ChoicesEB::getCorrectAnswer)
-                                .findAny().orElse(null));
+                                .findAny().orElseThrow(() ->
+                                new InternalServerErrorException("Don't have correct answer, something wrong with the question")));
 
                 boolean isCorrectChoice = userGivenChoice.getId().equals(correctChoiceForQuestion.getId());
 
-                savedAnswer = answersRepository.save(answerRequest.createAnswerEntity(questionEntity,
+                // Create a new answer if the question not answered, if not, will update the existing answer
+                savedAnswer = answersRepository.save(answerRequest.createOrUpdateAnswer(questionEntity,
                         userGivenChoice,
                         sessionEntity,
                         isCorrectChoice,
                         correctChoiceForQuestion.getChoiceText()));
 
             } else {
-                throw new Exception("User is not the creator of the relevant Answer set");
+                throw new UnauthorizedException("You are not allowed to create an Answer");
             }
 
             return ResponseEntity.ok(savedAnswer.getId().intValue());
+        } catch (UnauthorizedException | NoContentException e) {
+            throw e;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+            throw new InternalServerErrorException("Unexpected error occurred while creating an Answer");
         }
     }
 
     public ResponseEntity<List<AnswersResponse>> getAnswersForSessionId(String sessionId) {
         try {
-            List<AnswersEB> results = answersRepository.getAnswersForSession(Long.parseLong(sessionId));
+            List<AnswersEB> results = answersRepository.findAnswersBySession_Id(Long.parseLong(sessionId));
             List<AnswersResponse> answersResponses = results.stream()
                     .map(result -> new AnswersResponse().createAnswerResponse(result))
                     .toList();

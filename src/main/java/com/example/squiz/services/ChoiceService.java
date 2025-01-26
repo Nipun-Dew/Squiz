@@ -16,28 +16,25 @@ import java.util.Optional;
 public class ChoiceService {
     private final ChoiceRepository choiceRepository;
 
-    private final ChoiceResponse choiceResponse;
-
     @Autowired
     public ChoiceService(ChoiceRepository choiceRepository) {
         this.choiceRepository = choiceRepository;
-        this.choiceResponse = new ChoiceResponse();
     }
 
     public ResponseEntity<ChoiceResponse> getChoice(String id) {
         try {
             Optional<ChoicesEB> optionalChoice = choiceRepository.findById(Long.parseLong(id));
 
-            return optionalChoice.map(choice -> ResponseEntity.ok(choiceResponse.createChoiceResponse(choice)))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(choiceResponse));
+            return optionalChoice.map(choice -> ResponseEntity.ok(new ChoiceResponse().createChoiceResponse(choice)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ChoiceResponse()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(choiceResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ChoiceResponse());
         }
     }
 
     public ResponseEntity<List<ChoiceResponse>> getChoicesForQuestion(String questionId) {
         try {
-            List<ChoicesEB> results = choiceRepository.getChoicesForQuestion(Long.parseLong(questionId));
+            List<ChoicesEB> results = choiceRepository.findChoicesByQuestions_Id(Long.parseLong(questionId));
             List<ChoiceResponse> choiceResponses = results.stream()
                     .map(result -> new ChoiceResponse().createChoiceResponse(result))
                     .toList();

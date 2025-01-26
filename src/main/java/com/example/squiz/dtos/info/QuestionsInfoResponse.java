@@ -21,11 +21,6 @@ public class QuestionsInfoResponse {
         List<ChoiceResponse> choices = new ArrayList<>(questionEntity.getChoices().stream().map(choice ->
                 new ChoiceResponse().createChoiceResponse(choice)).toList());
 
-        if (questionEntity.getAnswers() != null && !questionEntity.getAnswers().isEmpty()) {
-            this.setAnswers(questionEntity.getAnswers().stream().map(answer ->
-                    new AnswersResponse().createAnswerResponse(answer)).toList());
-        }
-
         choices.sort(Comparator.comparingLong(ChoiceResponse::getId));
 
         this.setQuestion(new QuestionsResponse().createQuestionsResponse(questionEntity));
