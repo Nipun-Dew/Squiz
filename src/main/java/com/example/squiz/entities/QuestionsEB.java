@@ -25,7 +25,7 @@ public class QuestionsEB {
     @JoinColumn(name = "quiz_id", referencedColumnName = "id")
     private QuizEB quiz;
 
-    @OneToMany(mappedBy = "questions")
+    @OneToMany(mappedBy = "question")
     private Set<AnswersEB> answers;
 
     @OneToMany(mappedBy = "questions")

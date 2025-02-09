@@ -14,11 +14,11 @@ public class AnswersEB {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private QuestionsEB questions;
+    private QuestionsEB question;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "choice_id", referencedColumnName = "id")
-    private ChoicesEB choices;
+    private ChoicesEB choice;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "session_id", referencedColumnName = "id")
@@ -46,20 +46,20 @@ public class AnswersEB {
         this.session = session;
     }
 
-    public QuestionsEB getQuestions() {
-        return questions;
+    public QuestionsEB getQuestion() {
+        return question;
     }
 
-    public void setQuestions(QuestionsEB questions) {
-        this.questions = questions;
+    public void setQuestion(QuestionsEB questions) {
+        this.question = questions;
     }
 
-    public ChoicesEB getChoices() {
-        return choices;
+    public ChoicesEB getChoice() {
+        return choice;
     }
 
-    public void setChoices(ChoicesEB choices) {
-        this.choices = choices;
+    public void setChoice(ChoicesEB choices) {
+        this.choice = choices;
     }
 
     public LocalDateTime getSubmitTime() {

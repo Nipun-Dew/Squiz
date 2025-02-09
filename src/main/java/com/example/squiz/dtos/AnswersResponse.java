@@ -15,8 +15,8 @@ public class AnswersResponse {
 
     public AnswersResponse createAnswerResponse(AnswersEB answerEntity) {
         this.setId(answerEntity.getId());
-        this.setQuestionId(answerEntity.getQuestions().getId().intValue());
-        this.setChoiceId(answerEntity.getChoices().getId().intValue());
+        this.setQuestionId(answerEntity.getQuestion().getId().intValue());
+        this.setChoiceId(answerEntity.getChoice().getId().intValue());
         this.setSessionId(answerEntity.getSession().getId().intValue());
         this.setSubmitTime(answerEntity.getSubmitTime());
         this.setCorrectAnswer(answerEntity.getCorrectAnswer());

@@ -25,8 +25,8 @@ public class AnswersRequest {
         AnswersEB newAnswer = new AnswersEB();
         // If id has a value in answer request, this method will update the existing answer for the given id
         newAnswer.setId(id);
-        newAnswer.setQuestions(questionEntity);
-        newAnswer.setChoices(choiceEntity);
+        newAnswer.setQuestion(questionEntity);
+        newAnswer.setChoice(choiceEntity);
         newAnswer.setSession(sessionEntity);
         newAnswer.setIsCorrectAnswer(isCorrectAnswer);
         newAnswer.setCorrectAnswer(correctAnswer);

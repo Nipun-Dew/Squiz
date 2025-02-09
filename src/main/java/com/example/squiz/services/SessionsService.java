@@ -6,15 +6,14 @@ import com.example.squiz.entities.SessionsEB;
 import com.example.squiz.entities.AnswersEB;
 import com.example.squiz.entities.QuizEB;
 import com.example.squiz.exceptions.customExceptions.*;
+import com.example.squiz.repos.ResultsRepository;
 import com.example.squiz.repos.SessionsRepository;
 import com.example.squiz.repos.AnswersRepository;
 import com.example.squiz.repos.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +22,17 @@ public class SessionsService {
     private final SessionsRepository sessionsRepository;
     private final QuizRepository quizRepository;
     private final AnswersRepository answersRepository;
+    private final ResultsService resultsService;
 
     @Autowired
     public SessionsService(SessionsRepository sessionsRepository,
-                           QuizRepository quizRepository, AnswersRepository answersRepository) {
+                           QuizRepository quizRepository,
+                           AnswersRepository answersRepository,
+                           ResultsService resultsService) {
         this.sessionsRepository = sessionsRepository;
         this.quizRepository = quizRepository;
         this.answersRepository = answersRepository;
+        this.resultsService = resultsService;
     }
 
     public ResponseEntity<SessionResponse> getSession(String id) {
@@ -148,6 +151,10 @@ public class SessionsService {
 
             session.setCompleted(true);
             SessionsEB savedSession = sessionsRepository.save(session);
+
+            if (savedSession.getCompleted()) {
+                resultsService.generateResults(savedSession);
+            }
 
             return ResponseEntity.ok(savedSession.getId().intValue());
         } catch (NoContentException e) {

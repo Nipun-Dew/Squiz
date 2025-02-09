@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface AnswersRepository extends JpaRepository<AnswersEB, Long> {
     @Query("SELECT a FROM AnswersEB a " +
-            "WHERE a.session.id = :sessionId AND a.questions.id = :questionId")
+            "WHERE a.session.id = :sessionId AND a.question.id = :questionId")
     Optional<AnswersEB> findByQuestionIdAndSessionId(@Param("questionId") long questionId, @Param("sessionId") long sessionId);
 
     List<AnswersEB> findAnswersBySession_Id(Long sessionId);

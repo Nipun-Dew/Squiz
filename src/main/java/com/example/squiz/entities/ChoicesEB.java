@@ -25,7 +25,7 @@ public class ChoicesEB {
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     private QuestionsEB questions;
 
-    @OneToMany(mappedBy = "choices")
+    @OneToMany(mappedBy = "choice")
     private Set<AnswersEB> answers;
 
     private String choiceNumber;
