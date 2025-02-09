@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.lang.Long.parseLong;
@@ -29,34 +30,38 @@ public class ResultsService {
     }
 
     public void generateResults(SessionsEB session) {
-        QuizEB quiz = session.getQuiz();
-        Set<AnswersEB> answers = session.getAnswers();
+        Optional<ResultsEB> optionalResults = resultsRepository.getResultsBySession_Id(session.getId());
 
-        LocalDateTime startTime = session.getStartTime();
-        LocalDateTime endTime = session.getEndTime();
+        if (optionalResults.isEmpty()) {
+            QuizEB quiz = session.getQuiz();
+            Set<AnswersEB> answers = session.getAnswers();
 
-        Duration duration = Duration.between(startTime, endTime);
-        Integer timeTakenInSeconds = Math.toIntExact(duration.getSeconds());
+            LocalDateTime startTime = session.getStartTime();
+            LocalDateTime endTime = session.getEndTime();
 
-        Integer correctAnswersCount = 0;
-        Integer incorrectAnswersCount = 0;
+            Duration duration = Duration.between(startTime, endTime);
+            Integer timeTakenInSeconds = Math.toIntExact(duration.getSeconds());
 
-        for (AnswersEB answer : answers) {
-            if (answer.getIsCorrectAnswer()) {
-                correctAnswersCount++;
-            } else {
-                incorrectAnswersCount++;
+            Integer correctAnswersCount = 0;
+            Integer incorrectAnswersCount = 0;
+
+            for (AnswersEB answer : answers) {
+                if (answer.getIsCorrectAnswer()) {
+                    correctAnswersCount++;
+                } else {
+                    incorrectAnswersCount++;
+                }
             }
+
+            ResultsEB resultsEB = new ResultsEB();
+            resultsEB.setQuiz(quiz);
+            resultsEB.setSession(session);
+            resultsEB.setNumberOfCorrectAnswers(correctAnswersCount);
+            resultsEB.setNumberOfIncorrectAnswers(incorrectAnswersCount);
+            resultsEB.setTimeTaken(timeTakenInSeconds);
+
+            resultsRepository.save(resultsEB);
         }
-
-        ResultsEB resultsEB = new ResultsEB();
-        resultsEB.setQuiz(quiz);
-        resultsEB.setSession(session);
-        resultsEB.setNumberOfCorrectAnswers(correctAnswersCount);
-        resultsEB.setNumberOfIncorrectAnswers(incorrectAnswersCount);
-        resultsEB.setTimeTaken(timeTakenInSeconds);
-
-        resultsRepository.save(resultsEB);
     }
 
     public ResponseEntity<ResultsResponse> getResults(String sessionId, String username) {

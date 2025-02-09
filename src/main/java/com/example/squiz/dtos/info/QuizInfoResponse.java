@@ -3,7 +3,9 @@ package com.example.squiz.dtos.info;
 import com.example.squiz.dtos.QuizResponse;
 import com.example.squiz.entities.QuizEB;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class QuizInfoResponse {
     private QuizResponse quiz;
@@ -13,9 +15,14 @@ public class QuizInfoResponse {
     }
 
     public QuizInfoResponse createQuizInfoResponse(QuizEB quizEntity) {
+        Stream<QuestionsInfoResponse> questions = quizEntity.getQuestions().stream().map(question ->
+                new QuestionsInfoResponse().createQuestionInfoResponse(question));
+
+        Stream<QuestionsInfoResponse> sortedQuestions = questions.sorted(
+                Comparator.comparingLong(question -> question.getQuestion().getId()));
+
         this.setQuiz(new QuizResponse().createQuizResponse(quizEntity));
-        this.setQuestions(quizEntity.getQuestions().stream().map(question ->
-                new QuestionsInfoResponse().createQuestionInfoResponse(question)).toList());
+        this.setQuestions(sortedQuestions.toList());
 
         return this;
     }
