@@ -15,7 +15,7 @@ public interface SessionsRepository extends JpaRepository<SessionsEB, Long> {
             "LEFT JOIN FETCH s.quiz " +
             "LEFT JOIN FETCH s.answers " +
             "WHERE s.quiz.id = :quizId AND s.userId = :userId")
-    Optional<SessionsEB> getSessionsForQuizByUserId(@Param("quizId") long quizId, @Param("userId") String userId);
+    List<SessionsEB> getSessionsForQuizByUserId(@Param("quizId") long quizId, @Param("userId") String userId);
 
     List<SessionsEB> findSessionsByQuiz_Id(Long quizId);
 }

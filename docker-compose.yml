@@ -14,18 +14,18 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data  # Persist PostgreSQL data
 
-  app:
-    image: squiz-app-test
-    environment:
-      - DB_URL=jdbc:postgresql://db:5432/squiz  # Use Spring-specific environment variable
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-    depends_on:
-      - db
-    ports:
-      - "8080:8080"
-    networks:
-      - my-network
+#  app:
+#    image: squiz-app-test
+#    environment:
+#      - DB_URL=jdbc:postgresql://db:5432/squiz  # Use Spring-specific environment variable
+#      - DB_USERNAME=postgres
+#      - DB_PASSWORD=postgres
+#    depends_on:
+#      - db
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - my-network
 
 networks:
   my-network:

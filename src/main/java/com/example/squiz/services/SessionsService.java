@@ -99,9 +99,9 @@ public class SessionsService {
     public ResponseEntity<SessionResponse> getSessionForQuizByUserId(String quizId, String username) { // couldn't test properly
         try {
             Long parsedQuizId = Long.parseLong(quizId);
-            Optional<SessionsEB> optionalSession = sessionsRepository.getSessionsForQuizByUserId(parsedQuizId, username);
+            List<SessionsEB> sessionList = sessionsRepository.getSessionsForQuizByUserId(parsedQuizId, username);
 
-            return optionalSession.map(session ->
+            return sessionList.stream().findFirst().map(session ->
                             ResponseEntity.ok(new SessionResponse().createSessionResponse(session)))
                     .orElseThrow(() -> new NoContentException("No session found for quiz ID: " + quizId + " and user: " + username));
 
